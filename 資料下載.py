@@ -15,8 +15,8 @@ Currency_data.to_excel(excel_filename)
 print(f"匯率資料已存儲為 '{excel_filename}'")
 print(Currency_data)
 
-Currency_data['Close'].plot() # 用CLOSE畫出圖形
-plt.xlabel("Date") #x軸的標籤
-plt.ylabel("Closing Price") #y軸的標籤
-plt.title(f"{Currency_symbol} Currency Price") #圖標題
+Currency_data['Close'].plot() # 用 CLOSE 畫出圖形
+plt.xlabel("Date") # x 軸的標籤
+plt.ylabel("Closing Price") # y 軸的標籤
+plt.title(f"{Currency_symbol} Currency Price") # 圖標題
 plt.show()
