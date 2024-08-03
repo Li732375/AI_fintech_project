@@ -70,7 +70,7 @@ Currency_data['LABEL'] = \
     Currency_data[f'Next_{pre_day}Day_Return'].apply(
         classify_return) # 創造新的一列 LABEL 來記錄漲跌
 Currency_data = Currency_data.dropna() # 刪除因技術指標計算出現的空值
-Currency_data.to_excel("data.xlsx") # 將整理好的資料存成excel
+Currency_data.to_excel("外匯data.xlsx") # 將整理好的資料存成excel
 print("已將結果寫入檔案 data.xlsx")
 
 ones_count = (Currency_data['LABEL'] == 1).sum()
