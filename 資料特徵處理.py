@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Created on Wed Jul 31 13:04:40 2024
+Created on Wed Jul 31 10:10:55 2024
 
-@author: 郭昱
+@author: user
 """
 
 import pandas as pd
@@ -27,10 +27,13 @@ Currency_data['MA_10'] = talib.SMA(df_close, 10) # 計算 MA10
 Currency_data['MA_20'] = talib.SMA(df_close, 20) # 計算 MA20
 Currency_data['RSI_14'] = talib.RSI(df_close, 14) # 計算 RSI
 macd, macdsignal, macdhist = talib.MACD(df_close, fastperiod = 12, 
-                                        slowperiod = 26, signalperiod = 9) # 計算 MACD
+                                        slowperiod = 26, 
+                                        signalperiod = 9) # 計算 MACD
 Currency_data['MACD'] = macd # 將 MACD 計算結果存回資料中
-Currency_data['KD'],  Currency_data['KD']= talib.STOCH(df_high, df_low, df_close, fastk_period = 9, 
-                                  slowk_period = 3, slowd_period = 3) # 計算 KD
+Currency_data['KD'],  Currency_data['KD'] = \
+    talib.STOCH(df_high, df_low, df_close, fastk_period = 9, slowk_period = 3, 
+                slowd_period = 3) # 計算 KD
+
 columns_to_shift = ['Close', 'MA_5', 'MA_10', 'MA_20', 'RSI_14', 'MACD', 
                     'KD_K', 'KD_D'] #選取需要進行處理的欄位名稱
 
@@ -54,17 +57,21 @@ for period in range(5, 21,5): # 運用迴圈帶入前 N 期收盤價
                 Currency_data[column].shift(period) # 運用.shift()方法取得收盤價
 
 # 處理 y 資料
-Currency_data['Next_5Day_Return'] = \
-    Currency_data['Close'].diff(5).shift(-5) # 計算價格變化
+pre_day = 1
+Currency_data[f'Next_{pre_day}Day_Return'] = \
+    Currency_data['Close'].diff(pre_day).shift(-pre_day) # 計算價格變化
+# diff 函數用來計算列中相鄰元素之間的差異。計算當前值與前一個時間點的值之間的差異。
+# shift 函數用來移動數據，負數表示向上移動，反之向下
 
 def classify_return(x):
     return 1 if x > 0 else 0  # 標示漲跌，大於0標示為漲(1)，小於0標示為跌(0)
 
 Currency_data['LABEL'] = \
-    Currency_data['Next_5Day_Return'].apply(
+    Currency_data[f'Next_{pre_day}Day_Return'].apply(
         classify_return) # 創造新的一列 LABEL 來記錄漲跌
 Currency_data = Currency_data.dropna() # 刪除因技術指標計算出現的空值
-Currency_data.to_excel("外匯data.xlsx") # 將整理好的資料存成excel
+Currency_data.to_excel("data.xlsx") # 將整理好的資料存成excel
+print("已將結果寫入檔案 data.xlsx")
 
 ones_count = (Currency_data['LABEL'] == 1).sum()
 zero_count = (Currency_data['LABEL'] == 0).sum()
