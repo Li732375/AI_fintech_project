@@ -41,7 +41,7 @@ model_accuracies = {}
 
 import time
 
-
+'''
 KNN = KNNmodel() # 設定KNN模型
 start_time = time.time()
 KNN.fit(trainX, trainY) # 模型訓練
@@ -105,7 +105,7 @@ model_accuracies['RandomForest'] = test_acc
 print(f'RF訓練集準確率 {train_acc:.2f}')
 print(f'RF測試集準確率 {test_acc:.2f}')
 print(f"測試時間: {training_time:.8f} 秒")
-
+'''
 
 Xgboost = XGBClassifier()
 start_time = time.time()
@@ -120,6 +120,38 @@ print('Xgboost測試集準確率 %.2f' % test_acc)
 print(f"測試時間: {training_time:.8f} 秒")
 
 
+# 繪製特徵重要性圖
+import matplotlib.pyplot as plt
+
+# 將特徵名稱和重要性配對
+feature_importance_pairs = list(zip(feature_names, 
+                                    Xgboost.feature_importances_))
+
+sorted_pairs = sorted(feature_importance_pairs, key = lambda x: x[1], 
+                      reverse = True)
+
+# 提取排序後的特徵，[:] 取得前幾名的特徵和重要性
+sorted_feature_names, sorted_importances = zip(*sorted_pairs[:25])
+print(sorted_feature_names)
+
+# 繪製特徵重要性橫條圖
+plt.rcParams['font.family'] = 'Microsoft JhengHei' # 設置中文字體
+plt.figure(figsize = (12, 8))
+bars = plt.barh(sorted_feature_names, sorted_importances, color = 'skyblue')
+        
+# 顯示每個橫條的數值
+for bar in bars:
+    width = bar.get_width()
+    plt.text(width + 0.002, bar.get_y() + bar.get_height()/2, 
+             f'{width * 100:.2f} %', 
+             va = 'center', ha = 'left', fontsize = 10)
+    
+plt.xlabel('特徵重要性')
+plt.ylabel('特徵')
+plt.title('特徵重要性')
+plt.tight_layout(pad = 0.5)
+plt.gca().invert_yaxis()  # 反轉 y 軸，使重要性高的特徵顯示在上面
+plt.show()
 
 best_model = max(model_accuracies, key = model_accuracies.get)
 best_accuracy = model_accuracies[best_model]
