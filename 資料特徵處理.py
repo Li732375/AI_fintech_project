@@ -1,12 +1,6 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Jul 31 10:10:55 2024
-
-@author: user
-"""
-
 import pandas as pd
 import talib
+
 
 Currency_data = pd.read_excel('TWD%3DX_Currency_data.xlsx', 
                               index_col = 'Date')  # 讀取匯率資料

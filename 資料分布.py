@@ -1,12 +1,6 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Aug  1 15:30:33 2024
-
-@author: 郭昱
-"""
-
 import pandas as pd
 from sklearn.model_selection import StratifiedKFold
+
 
 df = pd.read_excel("試跑資料TWD%3DX_Currency_data.xlsx")
 
