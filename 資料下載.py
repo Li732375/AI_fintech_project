@@ -17,6 +17,7 @@ plt.title(f"{Currency_symbol} Currency Price") # 圖標題
 plt.show()
 
 
+# pip install pandas_datareader
 # 下載聯邦基金利率數據
 fed_funds_rate = WebData.DataReader('FEDFUNDS', 'fred', start = '2020-01-01', 
                                     end = '2024-07-30')
