@@ -13,7 +13,7 @@ Currency_data.to_excel(excel_filename)
 print(f"匯率資料已存儲為 '{excel_filename}'")
 print(Currency_data)
 
-Currency_data['Close'].plot() # 用 CLOSE 畫出圖形
+Currency_data['Close'].plot() # 畫出圖形
 plt.xlabel("Date") # x 軸的標籤
 plt.ylabel("Closing Price") # y 軸的標籤
 plt.title(f"{Currency_symbol} Currency Price") # 圖標題
@@ -31,7 +31,7 @@ fed_funds_rate.to_excel(excel_filename)
 print(f"匯率資料已存儲為 '{excel_filename}'")
 print(fed_funds_rate)
 
-fed_funds_rate['FEDFUNDS'].plot() # 用 FEDFUNDS 畫出圖形
+fed_funds_rate['FEDFUNDS'].plot() # 畫出圖形
 plt.xlabel("Date") # x 軸的標籤
 plt.ylabel("FEDFUNDS") # y 軸的標籤
 plt.title("Fed Funds Rate") # 圖標題
@@ -48,7 +48,7 @@ cpi_data.to_excel(excel_filename)
 print(f"美國 cpi 資料已存儲為 '{excel_filename}'")
 print(cpi_data)
 
-cpi_data['CPIAUCNS'].plot() # 用 CPIAUCNS 畫出圖形
+cpi_data['CPIAUCNS'].plot() # 畫出圖形
 plt.xlabel("Date") # x 軸的標籤
 plt.ylabel("CPIAUCNS") # y 軸的標籤
 plt.title("CPI") # 圖標題
@@ -65,7 +65,7 @@ print(f"美國失業率資料已存儲為 '{excel_filename}'")
 print(unemployment_rate)
 
 plt.rcParams['font.family'] = 'Microsoft JhengHei' # 設置中文字體
-unemployment_rate['UNRATE'].plot() # 用 CPIAUCNS 畫出圖形
+unemployment_rate['UNRATE'].plot() # 畫出圖形
 plt.xlabel("Date") # x 軸的標籤
 plt.ylabel("UNRATE") # y 軸的標籤
 plt.title("美國失業率") # 圖標題
