@@ -53,3 +53,21 @@ plt.xlabel("Date") # x 軸的標籤
 plt.ylabel("CPIAUCNS") # y 軸的標籤
 plt.title("CPI") # 圖標題
 plt.show()
+
+# 下載美國失業率數據
+unemployment_rate = WebData.get_data_fred('UNRATE',
+                                          start = Data_Time_Start, 
+                                          end = Data_Time_End)
+# 顯示數據
+excel_filename = 'unemployment_rate.xlsx'
+unemployment_rate.to_excel(excel_filename)
+print(f"美國失業率資料已存儲為 '{excel_filename}'")
+print(unemployment_rate)
+
+plt.rcParams['font.family'] = 'Microsoft JhengHei' # 設置中文字體
+unemployment_rate['UNRATE'].plot() # 用 CPIAUCNS 畫出圖形
+plt.xlabel("Date") # x 軸的標籤
+plt.ylabel("UNRATE") # y 軸的標籤
+plt.title("美國失業率") # 圖標題
+plt.show()
+
