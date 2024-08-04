@@ -34,6 +34,22 @@ print(fed_funds_rate)
 fed_funds_rate['FEDFUNDS'].plot() # 用 FEDFUNDS 畫出圖形
 plt.xlabel("Date") # x 軸的標籤
 plt.ylabel("FEDFUNDS") # y 軸的標籤
-plt.title("Fed_Funds_Rate") # 圖標題
+plt.title("Fed Funds Rate") # 圖標題
 plt.show()
 
+
+# 下載美國 CPI 數據
+cpi_data = WebData.get_data_fred('CPIAUCNS',
+                                       start = Data_Time_Start, 
+                                       end = Data_Time_End)
+# 顯示數據
+excel_filename = 'cpi_data.xlsx'
+cpi_data.to_excel(excel_filename)
+print(f"美國 cpi 資料已存儲為 '{excel_filename}'")
+print(cpi_data)
+
+cpi_data['CPIAUCNS'].plot() # 用 CPIAUCNS 畫出圖形
+plt.xlabel("Date") # x 軸的標籤
+plt.ylabel("CPIAUCNS") # y 軸的標籤
+plt.title("CPI") # 圖標題
+plt.show()
