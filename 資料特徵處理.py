@@ -31,7 +31,7 @@ macd, macdsignal, macdhist = talib.MACD(df_close, fastperiod = 12,
                                         signalperiod = 9) # 計算 MACD
 Currency_data['MACD'] = macd # 將 MACD 計算結果存回資料中
 Currency_data['KD'],  Currency_data['KD'] = \
-    talib.STOCH(df_high, df_low, df_close, fastk_period = 9, slowk_period = 3, 
+    talib.STOCH(df_high, df_low, df_close, fastk_period = 14, slowk_period = 14, 
                 slowd_period = 3) # 計算 KD
 
 columns_to_shift = ['Close', 'MA_5', 'MA_10', 'MA_20', 'RSI_14', 'MACD', 
