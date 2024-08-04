@@ -16,7 +16,7 @@ print(Currency_data)
 Currency_data['Close'].plot() # 畫出圖形
 plt.xlabel("Date") # x 軸的標籤
 plt.ylabel("Closing Price") # y 軸的標籤
-plt.title(f"{Currency_symbol} Currency Price") # 圖標題
+plt.title(f"USD -> TWD") # 圖標題
 plt.show()
 
 
@@ -48,10 +48,11 @@ cpi_data.to_excel(excel_filename)
 print(f"美國 cpi 資料已存儲為 '{excel_filename}'")
 print(cpi_data)
 
+plt.rcParams['font.family'] = 'Microsoft JhengHei' # 設置中文字體
 cpi_data['CPIAUCNS'].plot() # 畫出圖形
 plt.xlabel("Date") # x 軸的標籤
 plt.ylabel("CPIAUCNS") # y 軸的標籤
-plt.title("CPI") # 圖標題
+plt.title("美國 CPI") # 圖標題
 plt.show()
 
 # 下載美國失業率數據
