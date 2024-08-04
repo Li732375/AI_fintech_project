@@ -1,5 +1,4 @@
 import pandas as pd
-import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
 from keras.models import Sequential
@@ -24,14 +23,16 @@ X_reshaped = []
 y_reshaped = []
 
 for i in range(len(X_scaled) - time_steps):
-    X_reshaped.append(X_scaled[i:i+time_steps])
-    y_reshaped.append(y_scaled[i+time_steps])
+    X_reshaped.append(X_scaled[i : i + time_steps])
+    y_reshaped.append(y_scaled[i + time_steps])
 
-X_reshaped = np.array(X_reshaped)
-y_reshaped = np.array(y_reshaped)
+# 轉換為 pandas DataFrame
+X_reshaped_df = pd.DataFrame(X_reshaped)
+y_reshaped_df = pd.DataFrame(y_reshaped)
 
 # 分割數據集
-X_train, X_test, y_train, y_test = train_test_split(X_reshaped, y_reshaped, 
+X_train, X_test, y_train, y_test = train_test_split(X_reshaped_df, 
+                                                    y_reshaped_df, 
                                                     test_size = 0.3, 
                                                     random_state = 42)
 

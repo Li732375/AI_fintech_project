@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Aug  1 13:43:02 2024
-
-@author: user
-"""
-
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from xgboost import XGBClassifier
