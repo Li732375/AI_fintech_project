@@ -2,9 +2,12 @@ import yfinance as yf
 import matplotlib.pyplot as plt
 import pandas_datareader.data as WebData
 
+Data_Time_Start = '2020-01-01'
+Data_Time_End = '2023-12-31'
+
 Currency_symbol = 'TWD%3DX' # 輸入股票代號下載匯率資料
 Currency_data = yf.download(Currency_symbol, 
-                            start = '2020-01-01', end = '2024-07-30') # 獲取特定日期範圍的匯率資料
+                            start = Data_Time_Start, end = Data_Time_End) # 獲取特定日期範圍的匯率資料
 excel_filename = f'{Currency_symbol}_Currency_data.xlsx' # 將匯率資料存儲為 Excel 檔案，以匯率代號作為檔案名稱
 Currency_data.to_excel(excel_filename)
 print(f"匯率資料已存儲為 '{excel_filename}'")
@@ -19,8 +22,9 @@ plt.show()
 
 # pip install pandas_datareader
 # 下載聯邦基金利率數據
-fed_funds_rate = WebData.DataReader('FEDFUNDS', 'fred', start = '2020-01-01', 
-                                    end = '2024-07-30')
+fed_funds_rate = WebData.DataReader('FEDFUNDS', 'fred', 
+                                    start = Data_Time_Start, 
+                                    end = Data_Time_End)
 # 顯示數據
 excel_filename = 'Fed_Funds_Rate.xlsx'
 fed_funds_rate.to_excel(excel_filename)
