@@ -50,6 +50,21 @@ for period in range(5, 21,5): # 運用迴圈帶入前 N 期收盤價
             Currency_data[f'{column}_{period}'] = \
                 Currency_data[column].shift(period) # 運用.shift()方法取得收盤價
 
+# =============================================================================
+# df1 = pd.read_excel('Fed_Funds_Rate.xlsx')  
+# df2 = pd.read_excel('cpi_data.xlsx')  
+# df3 = pd.read_excel('unemployment_rate.xlsx')  
+# 
+# df_merge = pd.merge(left = df1, right = df2, 
+#                     left_on = "DATE", right_on = "DATE")# 合併資料
+# df_merge_final = pd.merge(left=df_merge, right=df3, 
+#                           left_on='DATE', right_on='DATE')# 合併資料
+# df_merge_final = df_merge_final.sort_values(by = ["DATE"])#針對df_merge_final進行排序
+# 
+# print(df_merge_final)
+# =============================================================================
+
+      
 # 處理 y 資料
 pre_day = 1
 Currency_data[f'Next_{pre_day}Day_Return'] = \
@@ -64,10 +79,11 @@ Currency_data['LABEL'] = \
     Currency_data[f'Next_{pre_day}Day_Return'].apply(
         classify_return) # 創造新的一列 LABEL 來記錄漲跌
 Currency_data = Currency_data.dropna() # 刪除因技術指標計算出現的空值
-Currency_data.to_excel("外匯data.xlsx") # 將整理好的資料存成excel
+Currency_data.to_excel("data.xlsx") # 將整理好的資料存成excel
 print("已將結果寫入檔案 data.xlsx")
 
 ones_count = (Currency_data['LABEL'] == 1).sum()
 zero_count = (Currency_data['LABEL'] == 0).sum()
 print(f"上漲數為 {ones_count}")
 print(f"下跌數為 {zero_count}")
+
