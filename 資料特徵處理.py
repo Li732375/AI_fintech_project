@@ -49,8 +49,8 @@ for period in range(5, 21,5): # 運用迴圈帶入前 N 期收盤價
         for column in columns_to_shift: # 運用迴圈走訪所選的欄位名稱
             Currency_data[f'{column}_{period}'] = \
                 Currency_data[column].shift(period) # 運用.shift()方法取得收盤價
-
 # =============================================================================
+# 
 # df1 = pd.read_excel('Fed_Funds_Rate.xlsx')  
 # df2 = pd.read_excel('cpi_data.xlsx')  
 # df3 = pd.read_excel('unemployment_rate.xlsx')  
