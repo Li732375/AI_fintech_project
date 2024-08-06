@@ -10,7 +10,7 @@ Currency_symbol = 'TWD%3DX' # 輸入股票代號下載匯率資料
 Currency_data = yf.download(Currency_symbol, 
                             start = Data_Time_Start, end = Data_Time_End) # 獲取特定日期範圍的匯率資料
 
-excel_filename = f'{Currency_symbol}_Currency_data.xlsx' # 將匯率資料存儲為 Excel 檔案，以匯率代號作為檔案名稱
+excel_filename = f'{Currency_symbol}_Currency_Data.xlsx' # 將匯率資料存儲為 Excel 檔案，以匯率代號作為檔案名稱
 Currency_data.to_excel(excel_filename)
 print(f"匯率資料已存儲為 '{excel_filename}'")
 print(Currency_data)
@@ -49,7 +49,7 @@ cpi_data = WebData.get_data_fred('CPIAUCNS',
                                        start = Data_Time_Start, 
                                        end = Data_Time_End)
 
-excel_filename = 'usa_cpi_data.xlsx'
+excel_filename = 'USA_CPI_Data.xlsx'
 cpi_data.to_excel(excel_filename)
 print(f"美國 cpi 資料已存儲為 '{excel_filename}'")
 print(cpi_data)
@@ -68,7 +68,7 @@ unemployment_rate = WebData.get_data_fred('UNRATE',
                                           start = Data_Time_Start, 
                                           end = Data_Time_End)
 
-excel_filename = 'usa_unemployment_rate.xlsx'
+excel_filename = 'USA_Unemployment_Rate.xlsx'
 unemployment_rate.to_excel(excel_filename)
 print(f"美國失業率資料已存儲為 '{excel_filename}'")
 print(unemployment_rate)
@@ -115,7 +115,7 @@ TW_cpi = TW_cpi.loc[Data_Time_Start : Data_Time_End]
 print(TW_cpi)
 
 
-excel_filename = 'TW_cpi.xlsx'
+excel_filename = 'TW_CPI.xlsx'
 TW_cpi.to_excel(excel_filename)
 print(f"台灣 消費者物價指數 資料已存儲為 '{excel_filename}'")
 
