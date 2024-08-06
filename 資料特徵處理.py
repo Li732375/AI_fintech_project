@@ -46,35 +46,23 @@ for period in range(5, 21,5): # 運用迴圈帶入前 N 期收盤價
         for column in columns_to_shift: # 運用迴圈走訪所選的欄位名稱
             Currency_data[f'{column}_{period}'] = \
                 Currency_data[column].shift(period) # 運用.shift()方法取得收盤價
-                
-df1 = pd.read_excel('Fed_Funds_Rate.xlsx')  
-df2 = pd.read_excel('USA_CPI_Data.xlsx')  
-df3 = pd.read_excel('USA_Unemployment_Rate.xlsx')  
-
+ 
 Fed_Funds_Rate = pd.read_excel('Fed_Funds_Rate.xlsx')  
 USA_CPI = pd.read_excel('USA_CPI_Data.xlsx')  
 USA_Unemployment_Rate = pd.read_excel('USA_Unemployment_Rate.xlsx')  
-df_merge = pd.merge(left = Fed_Funds_Rate, right = USA_CPI, 
-                     left_on = "DATE", right_on = "DATE") # 合併資料
-df_merge_final = pd.merge(left = df_merge, right = USA_Unemployment_Rate, 
-                          left_on = 'DATE', right_on = 'DATE') # 合併資料
-df_merge_final = df_merge_final.sort_values(by = ["DATE"]) # 針對df_merge_final進行排序
+TW_CPI = pd.read_excel('TW_CPI.xlsx')  
 
-print(df_merge_final)
+df_merge = pd.concat([Fed_Funds_Rate, USA_CPI], axis = 0) # 合併資料
+df_merge = pd.concat([df_merge, USA_Unemployment_Rate], axis= 0) # 合併資料
+df_merge = pd.concat([df_merge, TW_CPI], axis= 0) # 合併資料
 
-# =============================================================================
-# df = pd.DataFrame(df_merge_final)
-# 
-# # 打印原始欄位名稱
-# print("DATE", df.columns)
-# 
-# # 重命名單個欄位 'Rate' 為 '匯率'
-# df = df.rename(columns={'DATE': 'Date'})
-# 
-# # 打印調整後的欄位名稱
-# print("Date", df.columns)
-# 
-# =============================================================================
+df_merge = df_merge.sort_values(by = ["DATE"]) # 針對df_merge_final進行排序
+
+print(df_merge.head())
+
+# 重命名單個欄位 'Rate' 為 '匯率'
+df_merge = df_merge.rename(columns={'DATE': 'Date'})
+print(df_merge.head())
 
 # 處理 y 資料
 pre_day = 1
