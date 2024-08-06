@@ -13,7 +13,7 @@ Currency_data = yf.download(Currency_symbol,
 excel_filename = f'{Currency_symbol}_Currency_data.xlsx' # 將匯率資料存儲為 Excel 檔案，以匯率代號作為檔案名稱
 Currency_data.to_excel(excel_filename)
 print(f"匯率資料已存儲為 '{excel_filename}'")
-print(Currency_data)
+print(Currency_data.head())
 
 # 顯示數據
 Currency_data['Close'].plot() # 畫出圖形
@@ -34,7 +34,7 @@ fed_funds_rate = WebData.DataReader('FEDFUNDS', 'fred',
 excel_filename = 'Fed_Funds_Rate.xlsx'
 fed_funds_rate.to_excel(excel_filename)
 print(f"匯率資料已存儲為 '{excel_filename}'")
-print(fed_funds_rate)
+print(fed_funds_rate.head())
 
 # 顯示數據
 fed_funds_rate['FEDFUNDS'].plot() # 畫出圖形
@@ -52,7 +52,7 @@ cpi_data = WebData.get_data_fred('CPIAUCNS',
 excel_filename = 'USA_CPI_Data.xlsx'
 cpi_data.to_excel(excel_filename)
 print(f"美國 cpi 資料已存儲為 '{excel_filename}'")
-print(cpi_data)
+print(cpi_data.head())
 
 # 顯示數據
 plt.rcParams['font.family'] = 'Microsoft JhengHei' # 設置中文字體
@@ -71,7 +71,7 @@ unemployment_rate = WebData.get_data_fred('UNRATE',
 excel_filename = 'USA_Unemployment_Rate.xlsx'
 unemployment_rate.to_excel(excel_filename)
 print(f"美國失業率資料已存儲為 '{excel_filename}'")
-print(unemployment_rate)
+print(unemployment_rate.head())
 
 # 顯示數據
 plt.rcParams['font.family'] = 'Microsoft JhengHei' # 設置中文字體
@@ -94,7 +94,7 @@ print(TW_cpi.columns) # 檢視所有欄位
 
 TW_cpi = TW_cpi.drop(columns = ['累計平均']) # 移除該欄位
 TW_cpi = TW_cpi[:-4] # 移除最後四筆資料
-print(TW_cpi)
+print(TW_cpi.head())
 
 # 轉換為長格式。將指定列變成行，並且通常是將多個列的數據合併成少數幾列
 TW_cpi = TW_cpi.melt(id_vars = '民國年', var_name = '月份', 
@@ -112,7 +112,7 @@ TW_cpi = TW_cpi.drop(columns = ['西元年', '月份']) # 移除該欄位
 TW_cpi = TW_cpi.set_index(['Date']) # 設定索引
 TW_cpi = TW_cpi.sort_index()
 TW_cpi = TW_cpi.loc[Data_Time_Start : Data_Time_End]
-print(TW_cpi)
+print(TW_cpi.head())
 
 
 excel_filename = 'TW_CPI.xlsx'
