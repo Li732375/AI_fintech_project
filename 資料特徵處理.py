@@ -24,12 +24,9 @@ macd, macdsignal, macdhist = talib.MACD(df_close, fastperiod = 12,
                                         slowperiod = 26, 
                                         signalperiod = 9) # 計算 MACD
 Currency_data['MACD'] = macd # 將 MACD 計算結果存回資料中
-Currency_data['KD'],  Currency_data['KD'] = \
-    talib.STOCH(df_high, df_low, df_close, fastk_period = 14, slowk_period = 14, 
-                slowd_period = 3) # 計算 KD
-
-columns_to_shift = ['Close', 'MA_5', 'MA_10', 'MA_20', 'RSI_14', 'MACD', 
-                    'KD_K', 'KD_D'] #選取需要進行處理的欄位名稱
+Currency_data['K'],  Currency_data['D'] = \
+    talib.STOCH(df_high, df_low, df_close, fastk_period = 14, 
+                slowk_period = 14, slowd_period = 3) # 計算 KD
 
 upperband, middleband, lowerband = talib.BBANDS(df_close, 
                                           timeperiod=5, 
@@ -41,8 +38,8 @@ Currency_data['Bollinger Bands lower'] = lowerband
 
 
 columns_to_shift = ['Close', 'MA_5', 'MA_10', 'MA_20', 'RSI_14', 'MACD', 
-                    'KD','Bollinger Bands Upper', 'Bollinger Bands Middle' ,
-                    'Bollinger Bands lower'] #選取需要進行處理的欄位名稱
+                    'K', 'D','Bollinger Bands Upper', 
+                    'Bollinger Bands Middle', 'Bollinger Bands lower'] # 選取需要進行處理的欄位名稱
 
 # 參考前 5(週), 10(雙週), 15(三週), 20(月) 作為特徵相關參考
 for period in range(5, 21,5): # 運用迴圈帶入前 N 期收盤價
@@ -59,7 +56,7 @@ for period in range(5, 21,5): # 運用迴圈帶入前 N 期收盤價
 #                     left_on = "DATE", right_on = "DATE") # 合併資料
 # df_merge_final = pd.merge(left = df_merge, right = USA_Unemployment_Rate, 
 #                           left_on = 'DATE', right_on = 'DATE') # 合併資料
-# df_merge_final = df_merge_final.sort_values(by = ["DATE"]) #針對df_merge_final進行排序
+# df_merge_final = df_merge_final.sort_values(by = ["DATE"]) # 針對df_merge_final進行排序
 # 
 # print(df_merge_final)
 # =============================================================================
