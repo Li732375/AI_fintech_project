@@ -7,7 +7,7 @@ Currency_data = pd.read_excel('TWD%3DX_Currency_data.xlsx',
 
 missing_values = Currency_data.isnull().sum() # 檢查每一列是否有空值
 
-print(missing_values)
+#print(missing_values)
 
 Currency_data.drop(columns = ['Adj Close'], inplace = True)
 df_close = Currency_data['Close']
@@ -52,37 +52,54 @@ USA_CPI = pd.read_excel('USA_CPI_Data.xlsx')
 USA_Unemployment_Rate = pd.read_excel('USA_Unemployment_Rate.xlsx')  
 TW_CPI = pd.read_excel('TW_CPI.xlsx')  
 
-df_merge = pd.concat([Fed_Funds_Rate, USA_CPI], axis = 0) # 合併資料
-df_merge = pd.concat([df_merge, USA_Unemployment_Rate], axis= 0) # 合併資料
-df_merge = pd.concat([df_merge, TW_CPI], axis= 0) # 合併資料
-
-df_merge = df_merge.sort_values(by = ["DATE"]) # 針對df_merge_final進行排序
+# =============================================================================
+# merge_asof，用於合併兩個數據框，其中一個數據框的時間戳（或排序列）可能在另一個數據框中找不到完全對應的記錄。這時，可以根據時間戳的前向或後向對齊進行合併。
+# 參數說明
+# left: 左側數據框。
+# right: 右側數據框。
+# on: 要合併的列名（必須在兩個數據框中都有），這通常是時間戳列。
+# by: 可選，按指定列進行額外分組（例如，根據產品 ID 分組合併）。
+# left_by 和 right_by: 可選，指定按這些列進行合併的分組。
+# direction: 合併方向，有三個選項：
+# 'backward'（預設）：從右側數據框中選擇小於等於左側數據框的最接近值。
+# 'forward'：從右側數據框中選擇大於等於左側數據框的最接近值。
+# 'nearest'：從右側數據框中選擇最接近的值。
+# tolerance: 可選，指定容忍度（以時間間隔為單位），用來限制合併的時間差。
+# =============================================================================
+df_merge = pd.merge_asof(Fed_Funds_Rate.sort_values('DATE'), 
+                         USA_CPI.sort_values('DATE'), on = 'DATE') # 合併資料
+df_merge = pd.merge_asof(df_merge.sort_values('DATE'), 
+                         USA_Unemployment_Rate.sort_values('DATE'), 
+                         on = 'DATE') # 合併資料
+df_merge = pd.merge_asof(df_merge.sort_values('DATE'), 
+                         TW_CPI.sort_values('DATE'), on = 'DATE') # 合併資料
+df_merge = df_merge.sort_values(by = ["DATE"]) # 進行排序
 
 print(df_merge.head())
 
-# 重命名單個欄位 'Rate' 為 '匯率'
 df_merge = df_merge.rename(columns={'DATE': 'Date'})
+df_merge = pd.merge_asof(Currency_data.sort_values('Date'), 
+                         df_merge.sort_values('Date'), on = 'Date') # 合併資料
 print(df_merge.head())
 
 # 處理 y 資料
 pre_day = 1
-Currency_data[f'Next_{pre_day}Day_Return'] = \
-    Currency_data['Close'].diff(pre_day).shift(-pre_day) # 計算價格變化
+df_merge[f'Next_{pre_day}Day_Return'] = \
+    df_merge['Close'].diff(pre_day).shift(-pre_day) # 計算價格變化
 # diff 函數，計算列中相鄰元素之間的差異。計算當前值與前指定時間點的值（pre_day）的差
 # shift 函數﹑移動要指定哪個目標資料，負數表示向上移動，反之向下
 
 def classify_return(x):
     return 1 if x > 0 else 0  # 標示漲跌，大於0標示為漲(1)，小於0標示為跌(0)
 
-Currency_data['LABEL'] = \
-    Currency_data[f'Next_{pre_day}Day_Return'].apply(
+df_merge['LABEL'] = \
+    df_merge[f'Next_{pre_day}Day_Return'].apply(
         classify_return) # 創造新的一列 LABEL 來記錄漲跌
-Currency_data = Currency_data.dropna() # 刪除因技術指標計算出現的空值
-Currency_data.to_excel("data.xlsx") # 將整理好的資料存成 excel
+df_merge.to_excel("data.xlsx") # 將整理好的資料存成 excel
 print("已將結果寫入檔案 data.xlsx")
 
-ones_count = (Currency_data['LABEL'] == 1).sum()
-zero_count = (Currency_data['LABEL'] == 0).sum()
+ones_count = (df_merge['LABEL'] == 1).sum()
+zero_count = (df_merge['LABEL'] == 0).sum()
 print(f"上漲數為 {ones_count}")
 print(f"下跌數為 {zero_count}")
 
