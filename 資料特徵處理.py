@@ -105,7 +105,7 @@ df_merge['LABEL'] = \
     df_merge[f'Next_{pre_day}Day_Return'].apply(
         classify_return) # 創造新的一列 LABEL 來記錄漲跌
     
-df_merge.to_excel("data.xlsx") # 將整理好的資料存成 excel
+df_merge.to_excel("data.xlsx", index = False) # 將整理好的資料存成 excel
 print("已將結果寫入檔案 data.xlsx")
 
 ones_count = (df_merge['LABEL'] == 1).sum()
