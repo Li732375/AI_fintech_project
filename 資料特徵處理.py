@@ -41,12 +41,13 @@ columns_to_shift = ['Close', 'MA_5', 'MA_10', 'MA_20', 'RSI_14', 'MACD',
                     'K', 'D','Bollinger Bands Upper', 
                     'Bollinger Bands Middle', 'Bollinger Bands lower'] # 選取需要進行處理的欄位名稱
 
-# 參考前 5(週), 10(雙週), 15(三週), 20(月) 作為特徵相關參考
+# 參考前 5(週), 10(雙週), 15(三週), 20(月) 個交易日作為特徵相關參考
 for period in range(5, 21,5): # 運用迴圈帶入前 N 期收盤價
         for column in columns_to_shift: # 運用迴圈走訪所選的欄位名稱
             Currency_data[f'{column}_{period}'] = \
                 Currency_data[column].shift(period) # 運用.shift()方法取得收盤價
- 
+
+
 Fed_Funds_Rate = pd.read_excel('Fed_Funds_Rate.xlsx')  
 USA_CPI = pd.read_excel('USA_CPI_Data.xlsx')  
 USA_Unemployment_Rate = pd.read_excel('USA_Unemployment_Rate.xlsx')  
@@ -92,8 +93,10 @@ print(df_merge.head())
 pre_day = 1
 df_merge[f'Next_{pre_day}Day_Return'] = \
     df_merge['Close'].diff(pre_day).shift(-pre_day) # 計算價格變化
+# =============================================================================
 # diff 函數，計算列中相鄰元素之間的差異。計算當前值與前指定時間點的值（pre_day）的差
 # shift 函數﹑移動要指定哪個目標資料，負數表示向上移動，反之向下
+# =============================================================================
 
 def classify_return(x):
     return 1 if x > 0 else 0  # 標示漲跌，大於0標示為漲(1)，小於0標示為跌(0)
@@ -101,6 +104,7 @@ def classify_return(x):
 df_merge['LABEL'] = \
     df_merge[f'Next_{pre_day}Day_Return'].apply(
         classify_return) # 創造新的一列 LABEL 來記錄漲跌
+    
 df_merge.to_excel("data.xlsx") # 將整理好的資料存成 excel
 print("已將結果寫入檔案 data.xlsx")
 
