@@ -47,20 +47,17 @@ Currency_data['AVGPRICE'] = talib.AVGPRICE(df_open, df_high, df_low, df_close)
 Currency_data['WCLPRICE'] = talib.WCLPRICE(df_high, df_low, df_close)
 Currency_data['LINEARREG_ANGLE'] = talib.LINEARREG_ANGLE(df_close,14)
 Currency_data['WMA'] = talib.WMA(df_close,30) # 計算 MA5
-Currency_data['STDDEV '] = talib.STDDEV (df_close, timeperiod=5, nbdev=1)
+Currency_data['STDDEV'] = talib.STDDEV (df_close, timeperiod=5, nbdev=1)
+Currency_data['CDL3BLACKCROWS'] = talib.CDL3BLACKCROWS (df_open, df_high, df_low, df_close)
 
 
-# =============================================================================
-# Currency_data['STDDEV '] = talib.STDDEV (Currency_data, timeperiod=5, nbdev=1)
-# Currency_data['TSF '] = talib.TSF (Currency_data, timeperiod=14)
-# 
-# =============================================================================
 
 
 columns_to_shift = ['Close', 'MA_5', 'MA_10', 'MA_20', 'RSI_14', 'MACD', 
                     'K', 'D','Bollinger Bands Upper', 
                     'Bollinger Bands Middle', 'Bollinger Bands lower',
-                    'CCI', 'MOM', 'BOP','WILLR','SAR','AVGPRICE','LINEARREG_ANGLE','WMA','STDDEV '] # 選取需要進行處理的欄位名稱
+                    'CCI', 'MOM', 'BOP','WILLR','SAR','AVGPRICE','LINEARREG_ANGLE',
+                    'WMA','STDDEV','CDL3BLACKCROWS'] # 選取需要進行處理的欄位名稱
 
 # 參考前 5(週), 10(雙週), 15(三週), 20(月) 個交易日作為特徵相關參考
 for period in range(5, 21,5): # 運用迴圈帶入前 N 期收盤價
