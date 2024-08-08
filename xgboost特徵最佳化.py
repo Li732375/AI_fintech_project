@@ -7,15 +7,14 @@ df = pd.read_excel('data.xlsx', index_col = 'Date')
 def split_stock_data(stock_data, label_column, delete_column, test_size = 0.3, 
                      random_state = 42):
 
-    feature_names = ['MA_5_5', 'Close_5', 'Close_20', 
-                     'Bollinger Bands Upper_20', 'MA_5_20', 'FEDFUNDS', 
-                     'MA_20_15', 'MACD', 'MA_20_20']
+# =============================================================================
+#     feature_names = ['MA_10_5', 'MA_5_5', 'MA_5_20', 'CPIAUCNS', 
+#                      'Bollinger Bands lower_20', 'RSI_14_15', 'K', 'RSI_14_20']
+# =============================================================================
     
-# =============================================================================
-#     feature_names = stock_data.columns
-#     X = stock_data.drop(delete_column, axis = 1)
-# =============================================================================
-    X = stock_data[feature_names].values
+    feature_names = stock_data.columns
+    X = stock_data.drop(delete_column, axis = 1)
+    #X = stock_data[feature_names].values
     y = stock_data[label_column].values
     
     X_train, X_test, y_train, y_test = train_test_split(X, y, 
@@ -82,4 +81,4 @@ plt.show()
 
 best_model = max(model_accuracies, key = model_accuracies.get)
 best_accuracy = model_accuracies[best_model]
-print(f'準確率最高的模型是 {best_model}，準確率為 %.4f' % best_accuracy)
+print(f'準確率最高的模型是 {best_model}，準確率為 %.3f' % best_accuracy)
