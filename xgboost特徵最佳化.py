@@ -2,22 +2,22 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from xgboost import XGBClassifier
 
-df = pd.read_excel('data.xlsx')
+df = pd.read_excel('data.xlsx', index_col = 'Date')
 
 def split_stock_data(stock_data, label_column, delete_column, test_size = 0.3, 
                      random_state = 42):
 
-# =============================================================================
-#     feature_names = ['MA_5_5', 'Close_5', 'Close_20', 
-#                      'Bollinger Bands Upper_20', 'MA_5_20', 'FEDFUNDS', 
-#                      'Bollinger Bands Middle_20', 'MA_20_15', 'MACD', 
-#                      'MA_20_20']
-# =============================================================================
+    feature_names = ['MA_5_5', 'Close_5', 'Close_20', 
+                     'Bollinger Bands Upper_20', 'MA_5_20', 'FEDFUNDS', 
+                     'MA_20_15', 'MACD', 'MA_20_20']
     
-    feature_names = stock_data.columns
-    #X = stock_data[feature_names].values
-    X = stock_data.drop(delete_column, axis = 1)
+# =============================================================================
+#     feature_names = stock_data.columns
+#     X = stock_data.drop(delete_column, axis = 1)
+# =============================================================================
+    X = stock_data[feature_names].values
     y = stock_data[label_column].values
+    
     X_train, X_test, y_train, y_test = train_test_split(X, y, 
                                                         test_size = test_size, 
                                                         random_state = 
@@ -27,7 +27,7 @@ def split_stock_data(stock_data, label_column, delete_column, test_size = 0.3,
 
 label_column = 'LABEL' # 標籤欄位
 # 刪除的欄位
-delete_column = ['LABEL', 'Date', 'Volume', 'Next_1Day_Return']
+delete_column = ['LABEL', 'Volume', 'Next_1Day_Return']
 trainX, testX, trainY, testY, feature_names = split_stock_data(df, label_column, 
                                                 delete_column)
 model_accuracies = {}
@@ -42,8 +42,8 @@ training_time = time.time() - start_time
 
 test_acc = Xgboost.score(testX, testY)
 model_accuracies['XGBoost'] = test_acc
-print('Xgboost測試集準確率 %.4f' % test_acc)
-print(f"測試時間: {training_time:.4f} 秒")
+print('Xgboost測試集準確率 %.2f' % test_acc)
+print(f"測試時間: {training_time:.2f} 秒")
 
 
 # 繪製特徵重要性圖
@@ -57,7 +57,7 @@ sorted_pairs = sorted(feature_importance_pairs, key = lambda x: x[1],
                       reverse = True)
 
 # 提取排序後的特徵，[:] 取得前幾名的特徵和重要性
-sorted_feature_names, sorted_importances = zip(*sorted_pairs[:10])
+sorted_feature_names, sorted_importances = zip(*sorted_pairs[:])
 print(sorted_feature_names)
 
 # 繪製特徵重要性橫條圖
