@@ -48,15 +48,17 @@ for period in range(5, 21,5): # 運用迴圈帶入前 N 期收盤價
             Currency_data[f'{column}_{period}'] = \
                 Currency_data[column].shift(period) # 運用.shift()方法取得收盤價
 
-# 設定要刪除的期間
+
+# 因資料特定欄位計算有回朔需求而向前推進抓取時間，設定要排除的期間
 start_date = '2019-01-01'
 end_date   = '2019-12-31'
 
-
-# 刪除特定期間內的數據
+# 排除特定期間內的數據
 Currency_data.drop(Currency_data.
-                   loc[start_date:end_date].index, inplace=True)
+                   loc[start_date:end_date].index, inplace = True)
 
+
+# 讀入其他資料進行合併
 Fed_Funds_Rate = pd.read_excel('Fed_Funds_Rate.xlsx')  
 USA_CPI = pd.read_excel('USA_CPI_Data.xlsx')  
 USA_Unemployment_Rate = pd.read_excel('USA_Unemployment_Rate.xlsx')  
@@ -97,6 +99,7 @@ df_merge = df_merge.rename(columns={'DATE': 'Date'})
 df_merge = pd.merge_asof(Currency_data.sort_values('Date'), 
                          df_merge.sort_values('Date'), on = 'Date') # 合併資料
 print(df_merge.head())
+
 
 # 處理 y 資料
 pre_day = 1
