@@ -85,6 +85,25 @@ plt.title("美國失業率") # 圖標題
 plt.show()
 
 
+# 獲取 GDP 資料
+gdp_data = WebData.get_data_fred('GDP',
+                                 start = Data_Time_Start, 
+                                 end = Data_Time_End)
+
+excel_filename = 'USA_GDP.xlsx'
+gdp_data.to_excel(excel_filename)
+print(f"美國失業率資料已存儲為 '{excel_filename}'")
+print(gdp_data.head())
+
+# 顯示數據
+plt.rcParams['font.family'] = 'Microsoft JhengHei' # 設置中文字體
+gdp_data['GDP'].plot() # 畫出圖形
+plt.xlabel("Date") # x 軸的標籤
+plt.ylabel("GDP") # y 軸的標籤
+plt.title("美國 GDP") # 圖標題
+plt.show()
+
+
 import pandas as pd
 
 # 消費者物價指數及其年增率 網址
