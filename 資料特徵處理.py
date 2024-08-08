@@ -41,7 +41,7 @@ Currency_data['MOM'] = talib.MOM(df_close, timeperiod = 10)
 Currency_data['BOP'] = talib.BOP(df_open, df_high, df_low, df_close)
 Currency_data['WILLR'] = talib.WILLR(df_high, df_low, df_close, 
                                      timeperiod = 14)
-
+Currency_data['SAR'] = talib.SAR(df_high, df_low)
 
 
 
