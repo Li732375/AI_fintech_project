@@ -148,3 +148,5 @@ plt.xlabel("Date") # x 軸的標籤
 plt.ylabel("CPI") # y 軸的標籤
 plt.title("台灣 消費者物價-指數") # 圖標題
 plt.show()
+
+
