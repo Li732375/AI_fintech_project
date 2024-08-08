@@ -35,12 +35,14 @@ upperband, middleband, lowerband = talib.BBANDS(df_close,
 Currency_data['Bollinger Bands Upper'] = upperband
 Currency_data['Bollinger Bands Middle'] = middleband
 Currency_data['Bollinger Bands lower'] = lowerband
-
+Currency_data['CCI'] = talib.CCI(df_high, df_low, df_close, timeperiod = 14)
+Currency_data['MOM'] = talib.MOM(df_close, timeperiod = 10)
 
 
 columns_to_shift = ['Close', 'MA_5', 'MA_10', 'MA_20', 'RSI_14', 'MACD', 
                     'K', 'D','Bollinger Bands Upper', 
-                    'Bollinger Bands Middle', 'Bollinger Bands lower'] # 選取需要進行處理的欄位名稱
+                    'Bollinger Bands Middle', 'Bollinger Bands lower',
+                    'CCI', 'MOM'] # 選取需要進行處理的欄位名稱
 
 # 參考前 5(週), 10(雙週), 15(三週), 20(月) 個交易日作為特徵相關參考
 for period in range(5, 21,5): # 運用迴圈帶入前 N 期收盤價
