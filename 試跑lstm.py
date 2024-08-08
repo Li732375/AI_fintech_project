@@ -31,7 +31,7 @@ X_reshaped = np.array(X_reshaped)
 y_reshaped = np.array(y_reshaped)
 
 # 分割數據集
-X_train, X_test, y_train, y_test = train_test_split(X_reshaped, 
+X_train, X_test, Y_train, Y_test = train_test_split(X_reshaped, 
                                                     y_reshaped, 
                                                     test_size = 0.3, 
                                                     random_state = 42)
@@ -44,7 +44,7 @@ model.compile(optimizer = 'adam', loss = 'binary_crossentropy',
               metrics = ['accuracy']) # 編譯模型
 
 # 訓練模型
-model.fit(X_train, y_train, epochs = 20, batch_size = 32, 
+model.fit(X_train, Y_train, epochs = 20, batch_size = 32, 
           validation_split = 0.2)
 
 # 保存模型
@@ -58,4 +58,8 @@ print(f"成功載入模型 {model_Save_Name}")
 
 # 使用加載的模型進行預測
 predictions = loaded_model.predict(X_test)
-print(predictions)
+
+train_loss, train_acc = model.evaluate(X_train, Y_train, verbose = 0) # 訓練集準確度計算
+test_loss, test_acc = model.evaluate(X_test, Y_test, verbose = 0) # 測試集準確度計算
+print('LSTM訓練集準確率: %.4f' % train_acc)
+print('LSTM測試集準確率: %.4f' % test_acc) # 0.5
