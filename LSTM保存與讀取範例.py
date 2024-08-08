@@ -6,9 +6,12 @@ from keras.layers import LSTM, Dense
 import tensorflow as tf
 
 # 加載數據集
-data = pd.read_excel('外匯data.xlsx')
+data = pd.read_excel('data.xlsx')
 X = data.drop(['LABEL', 'Date'], axis = 1)
 y = data['LABEL']
+print(data.head())
+print(data.columns)
+print(f"shape {data.shape}")
 
 # 數據縮放
 scaler_X = MinMaxScaler()
