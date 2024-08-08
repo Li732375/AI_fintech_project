@@ -71,4 +71,3 @@ print('LSTM訓練集準確率: %.4f' % train_acc)
 print('LSTM測試集準確率: %.4f' % test_acc)
 print(f"測試時間: {training_time:.2f} 秒")
 
-print(data.columns)
