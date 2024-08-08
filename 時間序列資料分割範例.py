@@ -30,8 +30,8 @@ for i, (train_index, test_index) in enumerate(TSS.split(df, labels)):
     all_len = train_len + test_len
     
     print(f"第 {i+1} 份")
-    print(f"訓練集資料數：{train_len} (佔該批 {train_len / all_len * 100:.1f} %)")
-    print(f"測試集資料數：{test_len} (佔該批 {test_len / all_len * 100:.1f} %)")
+    print(f"訓練集資料數：{train_len} (佔該份 {train_len / all_len * 100:.1f} %)")
+    print(f"測試集資料數：{test_len} (佔該份 {test_len / all_len * 100:.1f} %)")
     print(f"訓練集索引（頭尾 5 個）：{train_df.index.tolist()[:5]}...{train_df.index.tolist()[-5:]}")
     print(f"測試集索引（頭尾 5 個）：{test_df.index.tolist()[:5]}...{test_df.index.tolist()[-5:]}")
     print('--------------')
