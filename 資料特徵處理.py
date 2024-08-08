@@ -37,6 +37,7 @@ Currency_data['Bollinger Bands Middle'] = middleband
 Currency_data['Bollinger Bands lower'] = lowerband
 
 
+
 columns_to_shift = ['Close', 'MA_5', 'MA_10', 'MA_20', 'RSI_14', 'MACD', 
                     'K', 'D','Bollinger Bands Upper', 
                     'Bollinger Bands Middle', 'Bollinger Bands lower'] # 選取需要進行處理的欄位名稱
@@ -47,6 +48,14 @@ for period in range(5, 21,5): # 運用迴圈帶入前 N 期收盤價
             Currency_data[f'{column}_{period}'] = \
                 Currency_data[column].shift(period) # 運用.shift()方法取得收盤價
 
+# 設定要刪除的期間
+start_date = '2019-01-01'
+end_date   = '2019-12-31'
+
+
+# 刪除特定期間內的數據
+Currency_data.drop(Currency_data.
+                   loc[start_date:end_date].index, inplace=True)
 
 Fed_Funds_Rate = pd.read_excel('Fed_Funds_Rate.xlsx')  
 USA_CPI = pd.read_excel('USA_CPI_Data.xlsx')  
