@@ -1,10 +1,13 @@
 import yfinance as yf
 import matplotlib.pyplot as plt
+import pandas as pd
 
-Data_Time_Start = '2020-01-01'
+Data_Time_Start = '2019-01-01'
 Data_Time_End = '2023-12-31'
 Data_Time_TW_Start = str(int(Data_Time_Start[0 : 4]) - 1911) + '-01-01'
 Data_Time_TW_End = str(int(Data_Time_End[0 : 4]) - 1911) + '-12-31'
+
+
 
 Currency_symbol = 'TWD%3DX' # 輸入股票代號下載匯率資料
 Currency_data = yf.download(Currency_symbol, 
