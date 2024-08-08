@@ -64,7 +64,8 @@ Currency_data.drop(Currency_data.
 Fed_Funds_Rate = pd.read_excel('Fed_Funds_Rate.xlsx')  
 USA_CPI = pd.read_excel('USA_CPI_Data.xlsx')  
 USA_Unemployment_Rate = pd.read_excel('USA_Unemployment_Rate.xlsx')  
-TW_CPI = pd.read_excel('TW_CPI.xlsx')  
+TW_CPI = pd.read_excel('TW_CPI.xlsx')
+USA_GDP = pd.read_excel('USA_GDP.xlsx')
 
 # =============================================================================
 # merge_asof，用於合併兩個數據框，其中一個數據框的時間戳（或排序列）可能在另一個數據框中找不到完全對應的記錄。這時，可以根據時間戳的前向或後向對齊進行合併。
@@ -93,6 +94,8 @@ df_merge = pd.merge_asof(df_merge.sort_values('DATE'),
                          on = 'DATE') # 合併資料
 df_merge = pd.merge_asof(df_merge.sort_values('DATE'), 
                          TW_CPI.sort_values('DATE'), on = 'DATE') # 合併資料
+df_merge = pd.merge_asof(df_merge.sort_values('DATE'), 
+                         USA_GDP.sort_values('DATE'), on = 'DATE') # 合併資料
 df_merge = df_merge.sort_values(by = ["DATE"]) # 進行排序
 
 print(df_merge.head())
