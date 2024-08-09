@@ -4,6 +4,7 @@ from sklearn.preprocessing import MinMaxScaler
 from keras.models import Sequential
 from keras.layers import LSTM, Dense
 import tensorflow as tf
+import numpy as np
 
 # 加載數據集
 data = pd.read_excel('data.xlsx')
@@ -29,13 +30,13 @@ for i in range(len(X_scaled) - time_steps):
     X_reshaped.append(X_scaled[i : i + time_steps])
     y_reshaped.append(y_scaled[i + time_steps])
 
-# 轉換為 pandas DataFrame
-X_reshaped_df = pd.DataFrame(X_reshaped)
-y_reshaped_df = pd.DataFrame(y_reshaped)
+
+X_reshaped = np.array(X_reshaped)
+y_reshaped = np.array(y_reshaped)
 
 # 分割數據集
-X_train, X_test, y_train, y_test = train_test_split(X_reshaped_df, 
-                                                    y_reshaped_df, 
+X_train, X_test, y_train, y_test = train_test_split(X_reshaped, 
+                                                    y_reshaped, 
                                                     test_size = 0.3, 
                                                     random_state = 42)
 
