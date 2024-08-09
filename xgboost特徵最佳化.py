@@ -7,14 +7,10 @@ df = pd.read_excel('data.xlsx', index_col = 'Date')
 def split_stock_data(stock_data, label_column, delete_column, test_size = 0.3, 
                      random_state = 42):
 
-# =============================================================================
-#     feature_names = ['MA_10_5', 'MA_5_5', 'MA_5_20', 'CPIAUCNS', 
-#                      'Bollinger Bands lower_20', 'RSI_14_15', 'K', 'RSI_14_20']
-# =============================================================================
-    
-    feature_names = stock_data.columns
-    X = stock_data.drop(delete_column, axis = 1)
+    #feature_names = ['FEDFUNDS', 'BOP', 'WILLR', 'WMA', 'AVGPRICE', 'D', 'LINEARREG_ANGLE', 'MA_10', 'CCI', 'Close', 'SAR', 'MA_20', 'K', 'High', 'MOM', 'WCLPRICE', 'Low', 'STDDEV', 'Bollinger Bands lower', 'MACD', 'RSI_14', 'UNRATE', 'CPIAUCNS', 'Bollinger Bands Upper', 'Open', 'CPI', 'MA_5']
     #X = stock_data[feature_names].values
+    X = stock_data.drop(delete_column, axis = 1)
+    feature_names = X.columns.tolist()
     y = stock_data[label_column].values
     
     X_train, X_test, y_train, y_test = train_test_split(X, y, 
@@ -26,7 +22,7 @@ def split_stock_data(stock_data, label_column, delete_column, test_size = 0.3,
 
 label_column = 'LABEL' # 標籤欄位
 # 刪除的欄位
-delete_column = ['LABEL', 'Volume', 'Next_1Day_Return']
+delete_column = ['LABEL', 'Volume', 'Next_1Day_Return', 'Bollinger Bands Middle', 'CDL3BLACKCROWS', 'GDP', '機動']
 trainX, testX, trainY, testY, feature_names = split_stock_data(df, label_column, 
                                                 delete_column)
 model_accuracies = {}
