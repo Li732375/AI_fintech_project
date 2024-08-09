@@ -104,8 +104,6 @@ plt.title("美國 GDP") # 圖標題
 plt.show()
 
 
-import pandas as pd
-
 # 消費者物價指數及其年增率 網址
 url = 'https://ws.dgbas.gov.tw/001/Upload/463/relfile/10315/2414/cpispl.xls'
 
@@ -136,17 +134,48 @@ TW_cpi = TW_cpi.sort_index()
 TW_cpi = TW_cpi.loc[Data_Time_Start : Data_Time_End]
 print(TW_cpi.head())
 
-
 excel_filename = 'TW_CPI.xlsx'
 TW_cpi.to_excel(excel_filename)
-print(f"台灣 消費者物價指數 資料已存儲為 '{excel_filename}'")
+print(f"台灣 CPI 資料已存儲為 '{excel_filename}'")
 
 # 顯示數據
 plt.rcParams['font.family'] = 'Microsoft JhengHei' # 設置中文字體
 TW_cpi['CPI'].plot() # 畫出圖形
 plt.xlabel("Date") # x 軸的標籤
 plt.ylabel("CPI") # y 軸的標籤
-plt.title("台灣 消費者物價-指數") # 圖標題
+plt.title("台灣 CPI") # 圖標題
 plt.show()
 
 
+# 台灣基準利率 網址
+url = 'https://www.cbc.gov.tw/tw/public/data/a13rate.xls'
+
+# pip install xlrd
+# 直接從 URL 讀取 excel 文件
+TW_rate = pd.read_excel(url, header = 4) # 指定第五行（索引為4）作欄位名稱
+print(TW_rate.columns) # 檢視所有欄位
+print(len(TW_rate))
+
+TW_rate['西元年'] = (TW_rate['　　　　'] + 191100).astype(str)
+TW_rate['DATE'] = TW_rate['西元年'].str[:4] + '/' + TW_rate['西元年'].str[4:] + '/1  00:00:00'
+TW_rate['DATE'] = pd.to_datetime(TW_rate['DATE'], format = '%Y/%m/%d %H:%M:%S', 
+                                 errors = 'coerce')
+TW_rate = TW_rate.set_index(['DATE']) # 設定索引
+print(type(TW_rate))
+TW_rate = TW_rate['機動'][24:] # 資料型態由 DataFrame 轉為 Series
+TW_rate = TW_rate.sort_index()
+TW_rate = TW_rate.loc[Data_Time_Start : Data_Time_End]
+print(type(TW_rate))
+print(TW_rate.head())
+
+excel_filename = 'TW_Rate.xlsx'
+TW_rate.to_excel(excel_filename)
+print(f"台灣 公告機動利率 資料已存儲為 '{excel_filename}'")
+
+# 顯示數據
+plt.rcParams['font.family'] = 'Microsoft JhengHei' # 設置中文字體
+TW_rate.plot() # 畫出圖形
+plt.xlabel("Date") # x 軸的標籤
+plt.ylabel("Rate") # y 軸的標籤
+plt.title("台灣 機動利率") # 圖標題
+plt.show()
