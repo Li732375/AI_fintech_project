@@ -1,116 +1,77 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from xgboost import XGBClassifier
+import matplotlib.pyplot as plt
+import numpy as np
+import time
+from matplotlib.colors import LinearSegmentedColormap
 
-df = pd.read_excel('data.xlsx', index_col = 'Date')
+# 讀取數據
+df = pd.read_excel('data.xlsx', index_col='Date')
 print(df.columns)
 
-def split_stock_data(stock_data, label_column, delete_column, test_size = 0.3, 
-                     random_state = 42):
-    
-    #feature_names = ['SAR']
-    #X = stock_data[feature_names].values
-    
-    X = stock_data.drop(delete_column, axis = 1)
+def split_stock_data(stock_data, label_column, delete_column, test_size=0.3, random_state=42):
+    X = stock_data.drop(delete_column, axis=1)
     feature_names = X.columns.tolist()
     y = stock_data[label_column].values
     
-    X_train, X_test, y_train, y_test = train_test_split(X, y, 
-                                                        test_size = test_size, 
-                                                        random_state = 
-                                                        random_state) # 資料分割
-
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=random_state)
+    
     return X_train, X_test, y_train, y_test, feature_names
 
-label_column = 'LABEL' # 標籤欄位
-# 刪除的欄位
+label_column = 'LABEL'
 delete_column = ['LABEL', 'Volume_x', 'Next_5Day_Return']
-trainX, testX, trainY, testY, feature_names = split_stock_data(df, label_column, 
-                                                delete_column)
+trainX, testX, trainY, testY, feature_names = split_stock_data(df, label_column, delete_column)
 model_accuracies = {}
 
-
-import time
-
+# 訓練 XGBoost 模型
 Xgboost = XGBClassifier()
 start_time = time.time()
 Xgboost.fit(trainX, trainY)
 training_time = time.time() - start_time
 
-test_predic = Xgboost.predict(testX) # 取得預測的結果
+test_predic = Xgboost.predict(testX)
 test_acc = Xgboost.score(testX, testY)
 model_accuracies['XGBoost'] = test_acc
 print('Xgboost測試集準確率 %.2f' % test_acc)
 print(f"測試時間: {training_time:.2f} 秒")
 
+# 創建年分
+df['Year'] = df.index.year
 
-# 繪製特徵重要性圖
-import matplotlib.pyplot as plt
+# 根據時間範圍和年份分割數據
+years = sorted(df['Year'].unique())
 
-# 將特徵名稱和重要性配對
-feature_importance_pairs = list(zip(feature_names, 
-                                    Xgboost.feature_importances_))
+# 確保有四年的數據
+if len(years) != 4:
+    raise ValueError("數據必須包含四年的數據")
 
-sorted_pairs = sorted(feature_importance_pairs, key = lambda x: x[1], 
-                      reverse = True)
-
-# 提取排序後的特徵，[:] 取得前幾名的特徵和重要性
-sorted_feature_names, sorted_importances = zip(*sorted_pairs[:])
-print(sorted_feature_names)
-
-# 繪製特徵重要性橫條圖
-plt.rcParams['font.family'] = 'Microsoft JhengHei' # 設置中文字體
-plt.figure(figsize = (12, 8))
-bars = plt.barh(sorted_feature_names, sorted_importances, color = 'skyblue')
-        
-# 顯示每個橫條的數值
-for bar in bars:
-    width = bar.get_width()
-    plt.text(width + 0.002, bar.get_y() + bar.get_height() / 2, 
-             f'{width * 100:.2f} %', 
-             va = 'center', ha = 'left', fontsize = 10)
+# 創建每年的熱量圖
+for i, year in enumerate(years):
+    plt.figure(figsize=(12, 4))
     
-plt.xlabel('特徵重要性')
-plt.ylabel('特徵')
-plt.title('特徵重要性')
-plt.tight_layout(pad = 0.5)
-plt.gca().invert_yaxis()  # 反轉 y 軸，使重要性高的特徵顯示在上面
-plt.show()
+    # 篩選該年份的數據
+    year_data = df[df['Year'] == year]
+    year_indices = year_data.index
+    year_testY = testY[testX.index.isin(year_indices)]
+    year_test_predic = test_predic[testX.index.isin(year_indices)]
 
+    # 將實際值和預測值組合成熱量圖數據
+    result = [0 if x == y else 1 for x, y in zip(year_testY, year_test_predic)]
+    year_heatmap_data = np.array(result).reshape(1, -1)  # 轉換為 (1, N) 的形狀
 
-best_model = max(model_accuracies, key = model_accuracies.get)
-best_accuracy = model_accuracies[best_model]
-print(f'準確率最高的模型是 {best_model}，準確率為 %.3f' % best_accuracy)
-
-
-# =============================================================================
-# print(testY)
-# print(test_predic)
-# =============================================================================
-
-# 顯示數據
-plt.rcParams['font.family'] = 'Microsoft JhengHei' # 設置中文字體# 假設 data1 和 data2 是二元數列
-
-data = pd.DataFrame({
-    '實際值': testY,
-    '預測值': test_predic
-}).T
-
-# 使用imshow繪製熱量圖
-plt.imshow(data, cmap='binary', interpolation='nearest')
-
-# 添加顏色條
-plt.colorbar()
-
-# =============================================================================
-# plt.scatter(testX.index, testY, label='實際值', alpha=0.5, marker='o')
-# plt.scatter(testX.index, test_predic, label='預測值', alpha=0.5, marker='x')
-# =============================================================================
-# =============================================================================
-# plt.plot(testY, label='實際值', color='blue')
-# plt.plot(test_predic, label='預測值', color='red')
-# =============================================================================
-plt.xlabel("Date") # x 軸的標籤
-plt.ylabel("Value") # y 軸的標籤
-plt.title("預測結果") # 圖標題
-plt.show()
+    # 繪製每年的熱量圖，使用黑白顏色映射
+    plt.imshow(year_heatmap_data, cmap='binary', interpolation='nearest', aspect='auto', extent=[0, len(year_testY), 0, 1])
+    
+    # 添加顏色條
+    plt.colorbar()
+    
+    # 設置標題和標籤
+    plt.title(f'年份 {year}')
+    plt.xlabel('樣本編號')
+    plt.ylabel('數據類型')
+    plt.yticks([0.5], ['實際 vs 預測'])
+    
+    # 顯示圖像
+    plt.show()
+    
