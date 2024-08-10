@@ -85,6 +85,8 @@ TW_CPI = pd.read_excel('TW_CPI.xlsx')
 USA_GDP = pd.read_excel('USA_GDP.xlsx')
 TW_Rate = pd.read_excel('TW_Rate.xlsx')
 DXY_NYB = pd.read_excel('dxy_data.xlsx')
+GOLD_data = pd.read_excel('gold_data.xlsx')
+
 # =============================================================================
 # merge_asof，用於合併兩個數據框，其中一個數據框的時間戳（或排序列）可能在另一個數據框中找不到完全對應的記錄。這時，可以根據時間戳的前向或後向對齊進行合併。
 # 參數說明
@@ -117,9 +119,13 @@ df_merge = pd.merge_asof(df_merge.sort_values('DATE'),
 df_merge = pd.merge_asof(df_merge.sort_values('DATE'), 
                          TW_Rate.sort_values('DATE'), on = 'DATE') # 合併資料
 
-DXY_NYB = DXY_NYB.rename(columns = {'Date': 'DATE'}) #小寫改大寫
+DXY_NYB = DXY_NYB.rename(columns = {'Date': 'DATE'}) # 美元指數小寫改大寫
 df_merge = pd.merge_asof(df_merge.sort_values('DATE'), 
                          DXY_NYB.sort_values('DATE'), on = 'DATE') # 合併資料
+
+GOLD_data = GOLD_data.rename(columns = {'Date': 'DATE'}) # 黃金改大寫
+df_merge = pd.merge_asof(df_merge.sort_values('DATE'), 
+                         GOLD_data.sort_values('DATE'), on = 'DATE') # 合併資料
 df_merge = df_merge.sort_values(by = ["DATE"]) # 進行排序
 print(df_merge.head())
 
@@ -132,7 +138,7 @@ print(df_merge.head())
 df_merge['CPI Delta'] = df_merge['CPIAUCNS'] - df_merge['CPI']
 
 # 處理 y 資料
-pre_day = 5
+pre_day = 1
 df_merge[f'Next_{pre_day}Day_Return'] = \
     df_merge['Close_x'].diff(pre_day).shift(-pre_day) # 計算價格變化
 # =============================================================================
@@ -154,5 +160,4 @@ ones_count = (df_merge['LABEL'] == 1).sum()
 zero_count = (df_merge['LABEL'] == 0).sum()
 print(f"上漲數為 {ones_count}")
 print(f"下跌數為 {zero_count}")
-print(f"總特徵數為 {len(df_merge.columns)}")
 
