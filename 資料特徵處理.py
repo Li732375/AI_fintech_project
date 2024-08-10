@@ -128,7 +128,7 @@ print(df_merge.head())
 df_merge['CPI Delta'] = df_merge['CPIAUCNS'] - df_merge['CPI']
 
 # 處理 y 資料
-pre_day = 1
+pre_day = 5
 df_merge[f'Next_{pre_day}Day_Return'] = \
     df_merge['Close'].diff(pre_day).shift(-pre_day) # 計算價格變化
 # =============================================================================
