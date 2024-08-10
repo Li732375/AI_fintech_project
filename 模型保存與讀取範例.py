@@ -74,7 +74,7 @@ train_loss, train_acc = model.evaluate(X_train, Y_train, verbose = 0) # 訓練�
 test_loss, test_acc = model.evaluate(X_test, Y_test, verbose = 0) # 測試集準確度計算
 print('LSTM訓練集準確率: %.3f' % train_acc)
 print('LSTM測試集準確率: %.3f' % test_acc)
-print(f"測試時間: {training_time // 60:.2f} 分 {training_time:.2f} 秒")
+print(f"訓練時間: {training_time // 60:.2f} 分 {training_time % 60:.2f} 秒")
 print(f"參數 \
       \n'time_steps'： {time_steps} \
       \n'units_1'： {units_1} \
