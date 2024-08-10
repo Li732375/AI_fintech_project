@@ -154,4 +154,5 @@ ones_count = (df_merge['LABEL'] == 1).sum()
 zero_count = (df_merge['LABEL'] == 0).sum()
 print(f"上漲數為 {ones_count}")
 print(f"下跌數為 {zero_count}")
+print(f"總特徵數為 {len(df_merge.columns)}")
 
