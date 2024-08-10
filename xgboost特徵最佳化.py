@@ -1,116 +1,56 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from xgboost import XGBClassifier
+import time
+import matplotlib.pyplot as plt
+
 
 df = pd.read_excel('data.xlsx', index_col = 'Date')
 print(df.columns)
 
-def split_stock_data(stock_data, label_column, delete_column, test_size = 0.3, 
+feature_names = ['Close_y', 'High_y', 'CPIAUCNS', 'Open_y', 'UNRATE', 'MA_20', 
+                 'MA_10', 'Growth Rate_x', 'USA_CPI_Rate', 'TW_CPI_Rate', 
+                 'WILLR', 'Open_x', 'K', 'RSI_14', 'Volume_y', 
+                 'Growth Rate_y', 'FEDFUNDS', 'Bollinger Bands lower', 
+                 'Bollinger Bands Upper', 'USA_GDP_Rate']
+# 0.821
+    
+def split_stock_data(stock_data, label_column, delete_column, MoveLabeliIndex, 
+                     test_size = 0.3, 
                      random_state = 42):
+    feature_name = feature_names[:i] + feature_names[i:] 
+    feature_name.remove(feature_name[MoveLabeliIndex])
     
-    #feature_names = ['SAR']
-    #X = stock_data[feature_names].values
-    
-    X = stock_data.drop(delete_column, axis = 1)
-    feature_names = X.columns.tolist()
+    X = stock_data[feature_name].values
     y = stock_data[label_column].values
     
     X_train, X_test, y_train, y_test = train_test_split(X, y, 
                                                         test_size = test_size, 
                                                         random_state = 
-                                                        random_state) # 資料分割
+                                                        random_state)
 
     return X_train, X_test, y_train, y_test, feature_names
 
 label_column = 'LABEL' # 標籤欄位
 # 刪除的欄位
 delete_column = ['LABEL', 'Volume_x', 'Next_5Day_Return']
-trainX, testX, trainY, testY, feature_names = split_stock_data(df, label_column, 
-                                                delete_column)
-model_accuracies = {}
+accuracies = []
 
 
-import time
-
-Xgboost = XGBClassifier()
-start_time = time.time()
-Xgboost.fit(trainX, trainY)
-training_time = time.time() - start_time
-
-test_predic = Xgboost.predict(testX) # 取得預測的結果
-test_acc = Xgboost.score(testX, testY)
-model_accuracies['XGBoost'] = test_acc
-print('Xgboost測試集準確率 %.2f' % test_acc)
-print(f"測試時間: {training_time:.2f} 秒")
-
-
-# 繪製特徵重要性圖
-import matplotlib.pyplot as plt
-
-# 將特徵名稱和重要性配對
-feature_importance_pairs = list(zip(feature_names, 
-                                    Xgboost.feature_importances_))
-
-sorted_pairs = sorted(feature_importance_pairs, key = lambda x: x[1], 
-                      reverse = True)
-
-# 提取排序後的特徵，[:] 取得前幾名的特徵和重要性
-sorted_feature_names, sorted_importances = zip(*sorted_pairs[:])
-print(sorted_feature_names)
-
-# 繪製特徵重要性橫條圖
-plt.rcParams['font.family'] = 'Microsoft JhengHei' # 設置中文字體
-plt.figure(figsize = (12, 8))
-bars = plt.barh(sorted_feature_names, sorted_importances, color = 'skyblue')
-        
-# 顯示每個橫條的數值
-for bar in bars:
-    width = bar.get_width()
-    plt.text(width + 0.002, bar.get_y() + bar.get_height() / 2, 
-             f'{width * 100:.2f} %', 
-             va = 'center', ha = 'left', fontsize = 10)
+for i in range(len(feature_names) - 1):
+    trainX, testX, trainY, testY, feature_names = split_stock_data(df, label_column, 
+                                                    delete_column, i)
+    Xgboost = XGBClassifier()
+    start_time = time.time()
+    Xgboost.fit(trainX, trainY)
+    training_time = time.time() - start_time
     
-plt.xlabel('特徵重要性')
-plt.ylabel('特徵')
-plt.title('特徵重要性')
-plt.tight_layout(pad = 0.5)
-plt.gca().invert_yaxis()  # 反轉 y 軸，使重要性高的特徵顯示在上面
-plt.show()
+    #test_predic = Xgboost.predict(testX) # 取得預測的結果
+    test_acc = Xgboost.score(testX, testY)
+    accuracies.append(test_acc)
+    
+    print('Xgboost測試集準確率 %.3f' % test_acc)
+    print(f"訓練時間: {training_time // 60:.2f} 分 {training_time % 60:.2f} 秒")
 
-
-best_model = max(model_accuracies, key = model_accuracies.get)
-best_accuracy = model_accuracies[best_model]
-print(f'準確率最高的模型是 {best_model}，準確率為 %.3f' % best_accuracy)
-
-
-# =============================================================================
-# print(testY)
-# print(test_predic)
-# =============================================================================
-
-# 顯示數據
-plt.rcParams['font.family'] = 'Microsoft JhengHei' # 設置中文字體# 假設 data1 和 data2 是二元數列
-
-data = pd.DataFrame({
-    '實際值': testY,
-    '預測值': test_predic
-}).T
-
-# 使用imshow繪製熱量圖
-plt.imshow(data, cmap='binary', interpolation='nearest')
-
-# 添加顏色條
-plt.colorbar()
-
-# =============================================================================
-# plt.scatter(testX.index, testY, label='實際值', alpha=0.5, marker='o')
-# plt.scatter(testX.index, test_predic, label='預測值', alpha=0.5, marker='x')
-# =============================================================================
-# =============================================================================
-# plt.plot(testY, label='實際值', color='blue')
-# plt.plot(test_predic, label='預測值', color='red')
-# =============================================================================
-plt.xlabel("Date") # x 軸的標籤
-plt.ylabel("Value") # y 軸的標籤
-plt.title("預測結果") # 圖標題
-plt.show()
+print(f'準確率最高為 {max(accuracies):.3f}, 第 {accuracies.index(max(accuracies)) + 1} 個 , {feature_names[accuracies.index(max(accuracies))]}')
+# 0.821
