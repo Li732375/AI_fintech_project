@@ -84,7 +84,7 @@ USA_Unemployment_Rate = pd.read_excel('USA_Unemployment_Rate.xlsx')
 TW_CPI = pd.read_excel('TW_CPI.xlsx')
 USA_GDP = pd.read_excel('USA_GDP.xlsx')
 TW_Rate = pd.read_excel('TW_Rate.xlsx')
-
+DXY_NYB = pd.read_excel('dxy_data.xlsx')
 # =============================================================================
 # merge_asof，用於合併兩個數據框，其中一個數據框的時間戳（或排序列）可能在另一個數據框中找不到完全對應的記錄。這時，可以根據時間戳的前向或後向對齊進行合併。
 # 參數說明
@@ -116,10 +116,14 @@ df_merge = pd.merge_asof(df_merge.sort_values('DATE'),
                          USA_GDP.sort_values('DATE'), on = 'DATE') # 合併資料
 df_merge = pd.merge_asof(df_merge.sort_values('DATE'), 
                          TW_Rate.sort_values('DATE'), on = 'DATE') # 合併資料
+
+DXY_NYB = DXY_NYB.rename(columns = {'Date': 'DATE'}) #小寫改大寫
+df_merge = pd.merge_asof(df_merge.sort_values('DATE'), 
+                         DXY_NYB.sort_values('DATE'), on = 'DATE') # 合併資料
 df_merge = df_merge.sort_values(by = ["DATE"]) # 進行排序
 print(df_merge.head())
 
-df_merge = df_merge.rename(columns={'DATE': 'Date'})
+df_merge = df_merge.rename(columns = {'DATE': 'Date'})
 df_merge = pd.merge_asof(Currency_data.sort_values('Date'), 
                          df_merge.sort_values('Date'), on = 'Date') # 合併資料
 print(df_merge.head())
@@ -130,7 +134,7 @@ df_merge['CPI Delta'] = df_merge['CPIAUCNS'] - df_merge['CPI']
 # 處理 y 資料
 pre_day = 5
 df_merge[f'Next_{pre_day}Day_Return'] = \
-    df_merge['Close'].diff(pre_day).shift(-pre_day) # 計算價格變化
+    df_merge['Close_x'].diff(pre_day).shift(-pre_day) # 計算價格變化
 # =============================================================================
 # diff 函數，計算列中相鄰元素之間的差異。計算當前值與前指定時間點的值（pre_day）的差
 # shift 函數﹑移動要指定哪個目標資料，負數表示向上移動，反之向下
