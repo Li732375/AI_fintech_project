@@ -59,6 +59,7 @@ columns_to_shift = ['Close', 'MA_5', 'MA_10', 'MA_20', 'RSI_14', 'MACD',
                     'CCI', 'MOM', 'BOP','WILLR','SAR','AVGPRICE','LINEARREG_ANGLE',
                     'WMA','STDDEV','CDL3BLACKCROWS'] # 選取需要進行處理的欄位名稱
 
+
 # =============================================================================
 # # 參考前 5(週), 10(雙週), 15(三週), 20(月) 個交易日作為特徵相關參考
 # for period in range(5, 21,5): # 運用迴圈帶入前 N 期收盤價
@@ -66,6 +67,12 @@ columns_to_shift = ['Close', 'MA_5', 'MA_10', 'MA_20', 'RSI_14', 'MACD',
 #             Currency_data[f'{column}_{period}'] = \
 #                 Currency_data[column].shift(period) # 運用.shift()方法取得收盤價
 # =============================================================================
+# 參考前 5(週), 10(雙週), 15(三週), 20(月) 作為特徵相關參考
+for period in range(5, 21,5): # 運用迴圈帶入前 N 期收盤價
+        for column in columns_to_shift: # 運用迴圈走訪所選的欄位名稱
+            Currency_data[f'{column}_{period}'] = \
+                Currency_data[column].shift(period) # 運用.shift()方法取得收盤價
+
 
 
 # 因資料特定欄位計算有回朔需求而向前推進抓取時間，設定要排除的期間
@@ -136,6 +143,7 @@ print(df_merge.head())
 
 # 計算差距欄位
 df_merge['CPI Delta'] = df_merge['CPIAUCNS'] - df_merge['CPI']
+
 
 # 處理 y 資料
 pre_day = 5
