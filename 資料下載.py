@@ -51,6 +51,7 @@ plt.show()
 cpi_data = WebData.get_data_fred('CPIAUCNS',
                                        start = Data_Time_Start, 
                                        end = Data_Time_End)
+cpi_data['USA_CPI_Rate'] = cpi_data['CPIAUCNS'].pct_change() # 算出增長率
 
 excel_filename = 'USA_CPI_Data.xlsx'
 cpi_data.to_excel(excel_filename)
@@ -89,6 +90,7 @@ plt.show()
 gdp_data = WebData.get_data_fred('GDP',
                                  start = Data_Time_Start, 
                                  end = Data_Time_End)
+gdp_data['USA_GDP_Rate'] = gdp_data['GDP'].pct_change() # 算出增長率
 
 excel_filename = 'USA_GDP.xlsx'
 gdp_data.to_excel(excel_filename)
@@ -132,6 +134,7 @@ TW_cpi = TW_cpi.drop(columns = ['西元年', '月份']) # 移除該欄位
 TW_cpi = TW_cpi.set_index(['DATE']) # 設定索引
 TW_cpi = TW_cpi.sort_index()
 TW_cpi = TW_cpi.loc[Data_Time_Start : Data_Time_End]
+TW_cpi['TW_CPI_Rate'] = TW_cpi['CPI'].pct_change() # 算出增長率
 print(TW_cpi.head())
 
 excel_filename = 'TW_CPI.xlsx'
@@ -162,7 +165,8 @@ TW_rate['DATE'] = pd.to_datetime(TW_rate['DATE'], format = '%Y/%m/%d %H:%M:%S',
                                  errors = 'coerce')
 TW_rate = TW_rate.set_index(['DATE']) # 設定索引
 print(type(TW_rate))
-TW_rate = TW_rate['機動'][24:] # 資料型態由 DataFrame 轉為 Series
+TW_rate['TW_Rate'] = TW_rate[['機動']][24:] # 若僅留一層 []，資料型態由 DataFrame 轉為 Series
+TW_rate = TW_rate[['TW_Rate']]
 TW_rate = TW_rate.sort_index()
 TW_rate = TW_rate.loc[Data_Time_Start : Data_Time_End]
 print(type(TW_rate))
