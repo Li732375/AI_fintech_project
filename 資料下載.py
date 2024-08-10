@@ -26,6 +26,25 @@ plt.title("USD -> TWD") # 圖標題
 plt.show()
 
 
+#下載美元指數與其成長率
+dxy_data = yf.download("DX-Y.NYB", start=Data_Time_Start, end=Data_Time_End)
+
+dxy_data['Growth Rate'] = dxy_data['Close'].pct_change() * 100# 計算每日的成長率（百分比）
+print(dxy_data[['Close', 'Growth Rate']].head())# 輸出結果
+dxy_data = dxy_data[['Close', 'Growth Rate']]
+
+excel_filename = 'dxy_data.xlsx'
+dxy_data.to_excel(excel_filename)
+print("美元指數與成長率已保存為 'dxy_data.xlsx'")
+
+# 顯示數據
+dxy_data['Close'].plot() # 畫出圖形
+plt.xlabel("Date") # x 軸的標籤
+plt.ylabel("Close'") # y 軸的標籤
+plt.title("dxy_data") # 圖標題
+plt.show()
+
+
 import pandas_datareader.data as WebData
 
 # pip install pandas_datareader
