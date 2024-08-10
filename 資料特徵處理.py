@@ -138,9 +138,9 @@ print(df_merge.head())
 df_merge['CPI Delta'] = df_merge['CPIAUCNS'] - df_merge['CPI']
 
 # 處理 y 資料
-pre_day = 1
+pre_day = 5
 df_merge[f'Next_{pre_day}Day_Return'] = \
-    df_merge['Close_x'].diff(pre_day).shift(-pre_day) # 計算價格變化
+    df_merge['Close'].diff(pre_day).shift(-pre_day) # 計算價格變化
 # =============================================================================
 # diff 函數，計算列中相鄰元素之間的差異。計算當前值與前指定時間點的值（pre_day）的差
 # shift 函數﹑移動要指定哪個目標資料，負數表示向上移動，反之向下
