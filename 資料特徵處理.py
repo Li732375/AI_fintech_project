@@ -49,8 +49,6 @@ Currency_data['STDDEV'] = talib.STDDEV (df_close, timeperiod=5, nbdev=1)
 Currency_data['CDL3BLACKCROWS'] = talib.CDL3BLACKCROWS (df_open, df_high, df_low, df_close)
 
 
-
-
 columns_to_shift = ['Close', 'MA_5', 'MA_10', 'MA_20', 'RSI_14', 'MACD', 
                     'K', 'D','Bollinger Bands Upper', 
                     'Bollinger Bands Middle', 'Bollinger Bands lower',
@@ -73,8 +71,8 @@ end_date   = '2019-12-31'
 
 # 排除特定期間內的數據
 Currency_data.drop(Currency_data.
-                   loc[start_date:end_date].index, inplace = True)
-
+                   loc[start_date : end_date].index, inplace = True)
+print(Currency_data.head())
 
 # 讀入其他資料進行合併
 Fed_Funds_Rate = pd.read_excel('Fed_Funds_Rate.xlsx')  
@@ -125,14 +123,10 @@ df_merge = pd.merge_asof(df_merge.sort_values('DATE'),
 GOLD_data = GOLD_data.rename(columns = {'Date': 'DATE'}) # 黃金改大寫
 df_merge = pd.merge_asof(df_merge.sort_values('DATE'), 
                          GOLD_data.sort_values('DATE'), on = 'DATE') # 合併資料
-df_merge = df_merge.sort_values(by = ["DATE"]) # 進行排序
-print(df_merge.head())
 
 Currency_data = Currency_data.rename(columns = {'Date': 'DATE'})
-print(Currency_data.head())
 df_merge = pd.merge_asof(Currency_data.sort_values('DATE'), 
                          df_merge.sort_values('DATE'), on = 'DATE') # 合併資料
-print(df_merge.head())
 
 # 計算差距欄位
 df_merge['CPI Delta'] = df_merge['CPIAUCNS'] - df_merge['CPI']
@@ -153,7 +147,8 @@ def classify_return(x):
 df_merge['LABEL'] = \
     df_merge[f'Next_{pre_day}Day_Return'].apply(
         classify_return) # 創造新的一列 LABEL 來記錄漲跌
-    
+
+print(df_merge.head())
 df_merge.to_excel("data.xlsx", index = False) # 將整理好的資料存成 excel
 print("已將結果寫入檔案 data.xlsx")
 
