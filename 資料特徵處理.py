@@ -1,10 +1,8 @@
 import pandas as pd
 import talib
-import numpy as np
 
 
-Currency_data = pd.read_excel('TWD%3DX_Currency_data.xlsx', 
-                              index_col = 'Date')  # 讀取匯率資料
+Currency_data = pd.read_excel('TWD%3DX_Currency_data.xlsx')  # 讀取匯率資料
 
 missing_values = Currency_data.isnull().sum() # 檢查每一列是否有空值
 
@@ -67,12 +65,6 @@ columns_to_shift = ['Close', 'MA_5', 'MA_10', 'MA_20', 'RSI_14', 'MACD',
 #             Currency_data[f'{column}_{period}'] = \
 #                 Currency_data[column].shift(period) # 運用.shift()方法取得收盤價
 # =============================================================================
-# 參考前 5(週), 10(雙週), 15(三週), 20(月) 作為特徵相關參考
-for period in range(5, 21,5): # 運用迴圈帶入前 N 期收盤價
-        for column in columns_to_shift: # 運用迴圈走訪所選的欄位名稱
-            Currency_data[f'{column}_{period}'] = \
-                Currency_data[column].shift(period) # 運用.shift()方法取得收盤價
-
 
 
 # 因資料特定欄位計算有回朔需求而向前推進抓取時間，設定要排除的期間
@@ -136,9 +128,10 @@ df_merge = pd.merge_asof(df_merge.sort_values('DATE'),
 df_merge = df_merge.sort_values(by = ["DATE"]) # 進行排序
 print(df_merge.head())
 
-df_merge = df_merge.rename(columns = {'DATE': 'Date'})
-df_merge = pd.merge_asof(Currency_data.sort_values('Date'), 
-                         df_merge.sort_values('Date'), on = 'Date') # 合併資料
+Currency_data = Currency_data.rename(columns = {'Date': 'DATE'})
+print(Currency_data.head())
+df_merge = pd.merge_asof(Currency_data.sort_values('DATE'), 
+                         df_merge.sort_values('DATE'), on = 'DATE') # 合併資料
 print(df_merge.head())
 
 # 計算差距欄位
