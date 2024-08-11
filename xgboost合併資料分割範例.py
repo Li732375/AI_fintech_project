@@ -2,6 +2,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split, TimeSeriesSplit
 import math
 from xgboost import XGBClassifier
+import matplotlib.pyplot as plt
 import time
 
 # 讀取資料
@@ -108,3 +109,12 @@ def calculate_overlap_rate(indices_list):
 
 overlap_rate = calculate_overlap_rate(split_indices)
 print(f"資料彼此重疊率：{overlap_rate * 100:.2f} %")
+
+
+# 顯示數據
+plt.rcParams['font.family'] = 'Microsoft JhengHei' # 設置中文字體
+plt.plot(range(1, len(test_scores) + 1), test_scores, marker = 'o', label = '測試集準確率')
+plt.xlabel("Date")
+plt.ylabel("準確率")
+plt.title("分批訓練準確率")
+plt.legend()
