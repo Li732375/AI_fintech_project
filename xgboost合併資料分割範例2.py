@@ -4,8 +4,6 @@ import math
 from xgboost import XGBClassifier
 import time
 import matplotlib.pyplot as plt
-import matplotlib.pyplot as plt
-import matplotlib.pyplot as plt
 
 # 讀取資料
 df = pd.read_excel("data.xlsx")
@@ -24,7 +22,7 @@ y = df[label_column].values
 
 accuracies = []
 
-n_splits = 4 # 設定分割數量 (年分 * 月數)
+n_splits = 4 # 設定分割數量
 overlap_rate = 3 * 0.1 + 1 # 設定每批訓練集之間的，最低重疊率
 max_train_size = math.ceil(len(df) // n_splits * overlap_rate) if \
     len(df) % n_splits == 0 else math.ceil(len(df) / n_splits * overlap_rate) # 計算最大訓練集大小
