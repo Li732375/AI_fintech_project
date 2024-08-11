@@ -4,7 +4,6 @@ from sklearn.preprocessing import MinMaxScaler
 from keras.models import Sequential
 from keras.layers import LSTM, Dense
 from tensorflow.keras.optimizers import Adam
-import tensorflow as tf
 import numpy as np
 import time
 import matplotlib.pyplot as plt
