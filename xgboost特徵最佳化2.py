@@ -4,7 +4,6 @@ from xgboost import XGBClassifier
 import matplotlib.pyplot as plt
 import numpy as np
 import time
-import matplotlib.dates as mdates
 
 
 # 讀取數據
@@ -140,23 +139,18 @@ def darw(result):
 darw(result[:])
 
 
-print(testX.shape)
-print(len(feature_names))
 # 將 numpy.ndarray 接回成 DataFrame
 train_df = pd.DataFrame(trainX, columns = feature_names)
-#train_df['target'] = trainY.values  # 將目標變數接回
-
 test_df = pd.DataFrame(testX, columns = feature_names)
-#test_df['target'] = testY.values  # 將目標變數接回
-
-# 顯示結果
-print("Train DataFrame:\n", train_df.head())
-print("\nTest DataFrame:\n", test_df.head())
+#print("Train DataFrame:\n", train_df.head())
+#print("\nTest DataFrame:\n", test_df.head())
 
 # 使用 'Index' 進行回朔資料
 test_df = test_df.merge(df[['DATE', 'Index', 'Open_x', 'High_x', 'Low_x', 
                             'Close']], on='Index', how='left')
 test_df.set_index('DATE', inplace = True)
+print("test_df:\n", test_df.head())
+
 test_df = test_df.sort_values(by = 'DATE', ascending=False)
 KLine_df = test_df.resample('W').agg({'Open_x_y': 'first', 'High_x': 'max', 
                                       'Low_x': 'min', 'Close': 'last'})
@@ -175,14 +169,8 @@ for i in range(len(KLine_df)):
     plt.plot([KLine_df.index[i], KLine_df.index[i]], 
              [row['Open_x_y'], row['Close']], color = color, linewidth = 5)  # K 棒
 
-# 設置 x 軸格式
-#plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
-plt.gca().xaxis.set_major_locator(mdates.WeekdayLocator())
-
 plt.xlabel('週')
 plt.ylabel('價格')
-plt.title('周K線圖')
-plt.xticks(rotation=45)
+plt.title('週 K 線圖')
+plt.xticks(rotation = 45)
 plt.grid(True)
-
-plt.show()
