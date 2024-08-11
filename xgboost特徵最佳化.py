@@ -4,6 +4,7 @@ from xgboost import XGBClassifier
 import matplotlib.pyplot as plt
 import numpy as np
 import time
+import matplotlib.dates as mdates
 
 
 # 讀取數據
@@ -153,4 +154,31 @@ test_df = pd.DataFrame(testX, columns = feature_names)
 print("Train DataFrame:\n", train_df)
 print("\nTest DataFrame:\n", test_df)
 
-print(test_df.index)
+# 確保 Date 列已經轉換為 DateTime 類型，並設置為索引
+df.index = pd.to_datetime(df.index)
+df = df.resample('W').agg({'Open_x': 'first', 'High_x': 'max', 'Low_x': 'min', 'Close': 'last'})
+
+# 創建一個新的 DataFrame 用於 K 線圖
+df['Color'] = df.apply(lambda row: 'g' if row['Close'] > row['Open_x'] else 'r', axis=1)
+
+# 繪製 K 線圖
+plt.figure(figsize=(12, 6))
+
+# 繪製 K 棒
+for i in range(len(df)):
+    row = df.iloc[i]
+    color = row['Color']
+    plt.plot([df.index[i], df.index[i]], [row['Low_x'], row['High_x']], color=color, linewidth=1)  # 垂直線
+    plt.plot([df.index[i], df.index[i]], [row['Open_x'], row['Close']], color=color, linewidth=5)  # K 棒
+
+# 設置 x 軸格式
+plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
+plt.gca().xaxis.set_major_locator(mdates.MonthLocator())
+
+plt.xlabel('日期')
+plt.ylabel('價格')
+plt.title('周K線圖')
+plt.xticks(rotation=45)
+plt.grid(True)
+
+plt.show()
