@@ -11,7 +11,7 @@ import matplotlib.dates as mdates
 df = pd.read_excel('data.xlsx')
 df['Index'] = range(len(df))
 
-print(df.columns)
+#print(df.columns)
 feature_names = ['Close_y', 'High_y', 'CPIAUCNS', 'Open_y', 'UNRATE', 'MA_20', 
                  'MA_10', 'Growth Rate_x', 'TW_CPI_Rate', 
                  'WILLR', 'Open_x', 'K', 'RSI_14', 'Volume_y', 
@@ -45,8 +45,7 @@ training_time = time.time() - start_time
 
 test_predic = Xgboost.predict(testX) # 取得預測的結果
 test_acc = Xgboost.score(testX, testY)
-print(f"資料型態 {type(testX)}")
-print(testX)
+
 
 # 進行 XOR 運算
 xor_result = np.bitwise_xor(test_predic, testY)
