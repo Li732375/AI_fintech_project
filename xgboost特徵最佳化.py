@@ -29,10 +29,10 @@ def split_stock_data(stock_data, label_column, delete_column, test_size = 0.3,
     return X_train, X_test, y_train, y_test, feature_names
 
 label_column = 'LABEL'
-delete_column = ['LABEL', 'Volume_x', 'Next_5Day_Return']
+delete_column = ['LABEL', 'Volume_x', 'Next_30Day_Return']
 accuracies = []
 
-
+# 分割資料
 trainX, testX, trainY, testY, feature_names = split_stock_data(df, label_column, 
                                                 delete_column)
 Xgboost = XGBClassifier()
@@ -42,6 +42,8 @@ training_time = time.time() - start_time
 
 test_predic = Xgboost.predict(testX) # 取得預測的結果
 test_acc = Xgboost.score(testX, testY)
+print(f"資料型態 {type(testX)}")
+print(testX)
 
 # 進行 XOR 運算
 xor_result = np.bitwise_xor(test_predic, testY)
@@ -66,35 +68,28 @@ import matplotlib.colors as mcolors
 result = pd.Series(xor_result)
 
 def darw(result):
-    # 每列 5 筆數據
-    num_columns = 5
-    
-    # 計算需要的行數
-    num_rows = (len(result) + num_columns - 1) // num_columns
-    
-    # 補齊數據
+    num_columns = 5 # 每列 5 筆數據
+    num_rows = (len(result) + num_columns - 1) // num_columns # 計算需要的行數
     data_padded = np.pad(result, 
                          (0, num_rows * num_columns - len(result)), 
-                         mode = 'constant', constant_values = -1)
+                         mode = 'constant', constant_values = -1) # 補齊數據
     
     # 重塑為每列 5 筆數據的二維矩陣
     result_2d = data_padded.reshape(num_rows, num_columns).T  # 轉置以符合每列顯示的要求
-    
-    # 添加自訂圖例
-    legend_labels = ['補齊部分', '0', '1']
-    colors = ['black', 'forestgreen', 'silver']
-    
-    # 自訂顏色映射
-    cmap = mcolors.ListedColormap(colors) # 補齊、0(對) 、1(錯)
-    bounds = [-1, 0, 1, 2] # -1：補齊數據, 0：原始數據, 1：補齊數據
-    norm = mcolors.BoundaryNorm(bounds, cmap.N)
-    
+
 # =============================================================================
 #     plt.rcParams['font.family'] = 'Microsoft JhengHei' # 設置中文字體
 #     plt.xlabel("週") # x 軸的標籤
 #     plt.ylabel("日") # x 軸的標籤
 # =============================================================================
-    
+     
+    # 添加自訂圖例
+    #legend_labels = ['補齊部分', '0', '1']
+    colors = ['black', 'forestgreen', 'silver']
+    cmap = mcolors.ListedColormap(colors) # 自訂顏色映射，補齊、0(對) 、1(錯)
+    bounds = [-1, 0, 1, 2] # -1：補齊數據, 0：原始數據, 1：補齊數據
+    norm = mcolors.BoundaryNorm(bounds, cmap.N)
+       
     # 繪製圖像
     plt.imshow(result_2d, cmap = cmap, norm = norm, interpolation='none', 
                aspect='equal')
@@ -141,3 +136,17 @@ def darw(result):
     #plt.title('XOR 運算結果')
     
 darw(result[:150])
+
+
+print(testX.shape)
+print(len(feature_names))
+# 將 numpy.ndarray 接回成 DataFrame
+train_df = pd.DataFrame(trainX, columns = feature_names)
+#train_df['target'] = trainY.values  # 將目標變數接回
+
+test_df = pd.DataFrame(testX, columns = feature_names)
+#test_df['target'] = testY.values  # 將目標變數接回
+
+# 顯示結果
+print("Train DataFrame:\n", train_df)
+print("\nTest DataFrame:\n", test_df)
