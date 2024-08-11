@@ -8,10 +8,10 @@ import matplotlib.dates as mdates
 
 
 # 讀取數據
-df = pd.read_excel('data.xlsx', index_col='Date')
+df = pd.read_excel('data.xlsx')
 df['Index'] = range(len(df))
 
-#print(df.columns)
+print(df.columns)
 feature_names = ['Close_y', 'High_y', 'CPIAUCNS', 'Open_y', 'UNRATE', 'MA_20', 
                  'MA_10', 'Growth Rate_x', 'TW_CPI_Rate', 
                  'WILLR', 'Open_x', 'K', 'RSI_14', 'Volume_y', 
@@ -151,8 +151,8 @@ test_df = pd.DataFrame(testX, columns = feature_names)
 #test_df['target'] = testY.values  # 將目標變數接回
 
 # 顯示結果
-print("Train DataFrame:\n", train_df)
-print("\nTest DataFrame:\n", test_df)
+print("Train DataFrame:\n", train_df.head())
+print("\nTest DataFrame:\n", test_df.head())
 
 # 確保 Date 列已經轉換為 DateTime 類型，並設置為索引
 df.index = pd.to_datetime(df.index)
