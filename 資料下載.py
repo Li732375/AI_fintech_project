@@ -242,9 +242,9 @@ TW_cpi['月份'] = TW_cpi['月份'].str.replace('月', '', regex = False) # 轉�
 TW_cpi['西元年'] = TW_cpi['民國年'] + 1911
 TW_cpi = TW_cpi.drop(columns = ['民國年']) # 移除該欄位
 TW_cpi['Date'] = TW_cpi['西元年'].astype(str) + '/' + TW_cpi['月份'] + '/1' # 合併兩時間為新欄位
-TW_cpi['Date'] = pd.to_datetime(TW_cpi['Date'], format='%Y/%m/%d') # 將 'date_str' 欄位轉換為時間格式
+TW_cpi['DATE'] = pd.to_datetime(TW_cpi['Date'], format='%Y/%m/%d') # 將 'date_str' 欄位轉換為時間格式
 TW_cpi = TW_cpi.drop(columns = ['西元年', '月份']) # 移除該欄位
-TW_cpi = TW_cpi.set_index(['Date']) # 設定索引
+TW_cpi = TW_cpi.set_index(['DATE']) # 設定索引
 TW_cpi = TW_cpi.sort_index()
 TW_cpi = TW_cpi.loc[Data_Time_Start : Data_Time_End]
 print(TW_cpi)
@@ -257,7 +257,7 @@ print(f"台灣 消費者物價指數 資料已存儲為 '{excel_filename}'")
 # 顯示數據
 plt.rcParams['font.family'] = 'Microsoft JhengHei' # 設置中文字體
 TW_cpi['CPI'].plot() # 畫出圖形
-plt.xlabel("Date") # x 軸的標籤
+plt.xlabel("DATE") # x 軸的標籤
 plt.ylabel("CPI") # y 軸的標籤
 plt.title("台灣 消費者物價-指數") # 圖標題
 plt.show()
