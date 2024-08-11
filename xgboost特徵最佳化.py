@@ -4,19 +4,17 @@ from xgboost import XGBClassifier
 import matplotlib.pyplot as plt
 import numpy as np
 import time
-import matplotlib.dates as mdates
 
 
 # 讀取數據
 df = pd.read_excel('data.xlsx')
-df['Index'] = range(len(df))
 
 #print(df.columns)
 feature_names = ['Close_y', 'High_y', 'CPIAUCNS', 'Open_y', 'UNRATE', 'MA_20', 
                  'MA_10', 'Growth Rate_x', 'TW_CPI_Rate', 
                  'WILLR', 'Open_x', 'K', 'RSI_14', 'Volume_y', 
                  'Growth Rate_y', 'FEDFUNDS', 'Bollinger Bands lower', 
-                 'Bollinger Bands Upper', 'USA_GDP_Rate', 'Index']
+                 'Bollinger Bands Upper', 'USA_GDP_Rate']
 # 0.821
     
 def split_stock_data(stock_data, label_column, delete_column, test_size = 0.3, 
@@ -138,46 +136,3 @@ def darw(result):
     #plt.title('XOR 運算結果')
     
 darw(result[:])
-
-
-print(testX.shape)
-print(len(feature_names))
-# 將 numpy.ndarray 接回成 DataFrame
-train_df = pd.DataFrame(trainX, columns = feature_names)
-#train_df['target'] = trainY.values  # 將目標變數接回
-
-test_df = pd.DataFrame(testX, columns = feature_names)
-#test_df['target'] = testY.values  # 將目標變數接回
-
-# 顯示結果
-print("Train DataFrame:\n", train_df.head())
-print("\nTest DataFrame:\n", test_df.head())
-
-# 確保 Date 列已經轉換為 DateTime 類型，並設置為索引
-df.index = pd.to_datetime(df.index)
-df = df.resample('W').agg({'Open_x': 'first', 'High_x': 'max', 'Low_x': 'min', 'Close': 'last'})
-
-# 創建一個新的 DataFrame 用於 K 線圖
-df['Color'] = df.apply(lambda row: 'g' if row['Close'] > row['Open_x'] else 'r', axis=1)
-
-# 繪製 K 線圖
-plt.figure(figsize=(12, 6))
-
-# 繪製 K 棒
-for i in range(len(df)):
-    row = df.iloc[i]
-    color = row['Color']
-    plt.plot([df.index[i], df.index[i]], [row['Low_x'], row['High_x']], color=color, linewidth=1)  # 垂直線
-    plt.plot([df.index[i], df.index[i]], [row['Open_x'], row['Close']], color=color, linewidth=5)  # K 棒
-
-# 設置 x 軸格式
-plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
-plt.gca().xaxis.set_major_locator(mdates.MonthLocator())
-
-plt.xlabel('日期')
-plt.ylabel('價格')
-plt.title('周K線圖')
-plt.xticks(rotation=45)
-plt.grid(True)
-
-plt.show()
