@@ -163,7 +163,8 @@ TW_cpi['月份'] = TW_cpi['月份'].str.replace('月', '', regex = False) # 轉�
 TW_cpi['西元年'] = TW_cpi['民國年'] + 1911
 TW_cpi = TW_cpi.drop(columns = ['民國年']) # 移除該欄位
 TW_cpi['DATE'] = TW_cpi['西元年'].astype(str) + '/' + TW_cpi['月份'] + '/1  00:00:00' # 合併兩時間為新欄位
-TW_cpi['DATE'] = pd.to_datetime(TW_cpi['DATE']) # 將 'date_str' 欄位轉換為時間格式
+TW_cpi['DATE'] = pd.to_datetime(TW_cpi['DATE'], format = '%Y/%m/%d %H:%M:%S', 
+                                 errors = 'coerce') # 將 'date_str' 欄位轉換為時間格式
 TW_cpi = TW_cpi.drop(columns = ['西元年', '月份']) # 移除該欄位
 TW_cpi = TW_cpi.set_index(['DATE']) # 設定索引
 TW_cpi = TW_cpi.sort_index()
@@ -198,12 +199,12 @@ TW_rate['DATE'] = TW_rate['西元年'].str[:4] + '/' + TW_rate['西元年'].str[
 TW_rate['DATE'] = pd.to_datetime(TW_rate['DATE'], format = '%Y/%m/%d %H:%M:%S', 
                                  errors = 'coerce')
 TW_rate = TW_rate.set_index(['DATE']) # 設定索引
-print(type(TW_rate))
+#print(type(TW_rate))
 TW_rate['TW_Rate'] = TW_rate[['機動']][24:] # 若僅留一層 []，資料型態由 DataFrame 轉為 Series
 TW_rate = TW_rate[['TW_Rate']]
-TW_rate = TW_rate.sort_index()
+TW_rate = TW_rate.sort_index()  
 TW_rate = TW_rate.loc[Data_Time_Start : Data_Time_End]
-print(type(TW_rate))
+#print(type(TW_rate))
 print(TW_rate.head())
 
 excel_filename = 'TW_Rate.xlsx'
@@ -218,46 +219,3 @@ plt.ylabel("Rate") # y 軸的標籤
 plt.title("台灣 機動利率") # 圖標題
 plt.show()
 
-
-# 消費者物價指數及其年增率 網址
-url = 'https://ws.dgbas.gov.tw/001/Upload/463/relfile/10315/2414/cpispl.xls'
-
-# pip install xlrd
-# 直接從 URL 讀取 excel 文件
-TW_cpi = pd.read_excel(url, header = 2) # 指定第三行（索引為2）作為欄位名稱
-print(TW_cpi.columns) # 檢視所有欄位
-
-TW_cpi = TW_cpi.drop(columns = ['累計平均']) # 移除該欄位
-TW_cpi = TW_cpi[:-4] # 移除最後四筆資料
-print(TW_cpi)
-
-# 轉換為長格式。將指定列變成行，並且通常是將多個列的數據合併成少數幾列
-TW_cpi = TW_cpi.melt(id_vars = '民國年', var_name = '月份', 
-                     value_name = 'CPI')
-
-# regex 參數的預設值是 True，會將要替換的字串視為正則表達式處理。
-TW_cpi['月份'] = TW_cpi['月份'].str.replace('月', '', regex = False) # 轉換月份
-
-# print(TW_cpi[TW_cpi.isna().any(axis = 1)]) # 顯示缺失值資料
-TW_cpi['西元年'] = TW_cpi['民國年'] + 1911
-TW_cpi = TW_cpi.drop(columns = ['民國年']) # 移除該欄位
-TW_cpi['Date'] = TW_cpi['西元年'].astype(str) + '/' + TW_cpi['月份'] + '/1' # 合併兩時間為新欄位
-TW_cpi['DATE'] = pd.to_datetime(TW_cpi['Date'], format='%Y/%m/%d') # 將 'date_str' 欄位轉換為時間格式
-TW_cpi = TW_cpi.drop(columns = ['西元年', '月份']) # 移除該欄位
-TW_cpi = TW_cpi.set_index(['DATE']) # 設定索引
-TW_cpi = TW_cpi.sort_index()
-TW_cpi = TW_cpi.loc[Data_Time_Start : Data_Time_End]
-print(TW_cpi)
-
-
-excel_filename = 'TW_CPI.xlsx'
-TW_cpi.to_excel(excel_filename)
-print(f"台灣 消費者物價指數 資料已存儲為 '{excel_filename}'")
-
-# 顯示數據
-plt.rcParams['font.family'] = 'Microsoft JhengHei' # 設置中文字體
-TW_cpi['CPI'].plot() # 畫出圖形
-plt.xlabel("DATE") # x 軸的標籤
-plt.ylabel("CPI") # y 軸的標籤
-plt.title("台灣 消費者物價-指數") # 圖標題
-plt.show()
