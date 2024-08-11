@@ -44,7 +44,7 @@ trainX, testX, trainY, testY, feature_names = split_stock_data(df, label_column,
 
 
 # 初始化 TimeSeriesSplit 參數
-n_splits = 12  # 設定分割數量 (年分 * 月數)
+n_splits = 12  # 設定分割數量 
 overlap_rate = 3 * 0.1 + 1  # 設定每批訓練集之間的最低重疊率
 max_train_size = math.ceil(len(df) // n_splits * overlap_rate) if len(df) % n_splits == 0 else math.ceil(len(df) / n_splits * overlap_rate)
 print(f"最大資料長度 {max_train_size}")
@@ -79,7 +79,6 @@ for i, (train_index, test_index) in enumerate(TSS.split(trainX, trainY)):
     # 訓練 XGBoost 模型
     Xgboost = XGBClassifier()
     start_time = time.time()
-    #print(sub_test)
     Xgboost.fit(sub_trainX, sub_trainY)
     training_time = time.time() - start_time
     
