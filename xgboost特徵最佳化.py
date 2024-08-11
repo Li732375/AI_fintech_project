@@ -8,12 +8,14 @@ import time
 
 # 讀取數據
 df = pd.read_excel('data.xlsx', index_col='Date')
+df['Index'] = range(len(df))
+
 #print(df.columns)
 feature_names = ['Close_y', 'High_y', 'CPIAUCNS', 'Open_y', 'UNRATE', 'MA_20', 
                  'MA_10', 'Growth Rate_x', 'TW_CPI_Rate', 
                  'WILLR', 'Open_x', 'K', 'RSI_14', 'Volume_y', 
                  'Growth Rate_y', 'FEDFUNDS', 'Bollinger Bands lower', 
-                 'Bollinger Bands Upper', 'USA_GDP_Rate']
+                 'Bollinger Bands Upper', 'USA_GDP_Rate', 'Index']
 # 0.821
     
 def split_stock_data(stock_data, label_column, delete_column, test_size = 0.3, 
@@ -29,7 +31,7 @@ def split_stock_data(stock_data, label_column, delete_column, test_size = 0.3,
     return X_train, X_test, y_train, y_test, feature_names
 
 label_column = 'LABEL'
-delete_column = ['LABEL', 'Volume_x', 'Next_30Day_Return']
+delete_column = ['LABEL', 'Volume_x', 'Next_5Day_Return']
 accuracies = []
 
 # 分割資料
@@ -135,7 +137,7 @@ def darw(result):
     
     #plt.title('XOR 運算結果')
     
-darw(result[:150])
+darw(result[:])
 
 
 print(testX.shape)
@@ -150,3 +152,5 @@ test_df = pd.DataFrame(testX, columns = feature_names)
 # 顯示結果
 print("Train DataFrame:\n", train_df)
 print("\nTest DataFrame:\n", test_df)
+
+print(test_df.index)
