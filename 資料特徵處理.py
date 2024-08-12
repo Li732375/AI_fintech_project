@@ -2,7 +2,8 @@ import pandas as pd
 import talib
 
 
-Currency_data = pd.read_excel('TWD%3DX_Currency_data.xlsx')  # 讀取匯率資料
+Currency_data = pd.read_excel('TWD%3DX_Currency_data.xlsx', 
+                              index_col = 'Date')  # 讀取匯率資料
 
 missing_values = Currency_data.isnull().sum() # 檢查每一列是否有空值
 
@@ -124,6 +125,7 @@ GOLD_data = GOLD_data.rename(columns = {'Date': 'DATE'}) # 黃金改大寫
 df_merge = pd.merge_asof(df_merge.sort_values('DATE'), 
                          GOLD_data.sort_values('DATE'), on = 'DATE') # 合併資料
 
+Currency_data = Currency_data.reset_index()
 Currency_data = Currency_data.rename(columns = {'Date': 'DATE'})
 df_merge = pd.merge_asof(Currency_data.sort_values('DATE'), 
                          df_merge.sort_values('DATE'), on = 'DATE') # 合併資料
